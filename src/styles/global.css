@@ -1,0 +1,387 @@
+/* Ascot Wealth Management: the design system.
+   Brand, measured from their own files: the logo's navy #022457 and the crown's gold #FEAD00 (counted pixels, 2026-11-19), set in
+   Inter (their stylesheet's only face). The direction (his brief, 2026-11-19): mostly WHITE and pale grey, the navy kept for a few
+   deliberate moments, sharp and enterprise. Corners 2px, hairline rules, no lifts, glows or scale-on-hover.
+   Contrast, measured: navy on white 14.6, ink-2 on white 10.9, ink-3 on mist 5.7, gold-ink on white 5.8, navy on gold 8.4,
+   gold on navy-deep 9.5. Gold is a FILL (with navy on it, as on the logo), never text on white. */
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+
+  --color-navy: #022457; /* the logo's navy: headings, the one dark band, the footer's text marks */
+  --color-navy-deep: #01183b; /* the footer and the "How we work" band */
+  --color-navy-mid: #0b3570; /* hover on navy */
+  --color-gold: #fead00; /* the crown: fills, rules, the primary button (navy on it) */
+  --color-gold-hover: #f09f00;
+  --color-gold-ink: #8a5d00; /* the same hue made to read as small text on white */
+
+  --color-paper: #ffffff;
+  --color-mist: #f4f6f9; /* the pale-grey sections: navy-tinted, never a flat mid-grey */
+  --color-mist-2: #e9edf3;
+  --color-line: #dde3ea;
+  --color-line-strong: #c4cdd8;
+
+  --color-ink: #0a1a31; /* body text: navy-tinted near-black */
+  --color-ink-2: #2f3d53;
+  --color-ink-3: #56637a;
+
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  --bar-h: 76px;
+  --hero-h: calc(100svh - var(--bar-h));
+  --hero-pad: clamp(1.5rem, 8svh - 2.5rem, 4.5rem);
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --wrap: 1200px;
+  --section: clamp(4rem, 2.6rem + 4.6vw, 6.75rem);
+  --radius: 2px;
+  scroll-padding-top: calc(var(--bar-h) + 1rem);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink-2);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+  :where(h1, h2, h3, h4) {
+    color: var(--color-navy);
+    text-wrap: balance;
+  }
+  :where(p) {
+    text-wrap: pretty;
+  }
+  :where(a) {
+    color: inherit;
+  }
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-navy);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* --- layout ---------------------------------------------------------------- */
+@utility wrap {
+  width: 100%;
+  max-width: calc(var(--wrap) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+@utility section {
+  padding-block: var(--section);
+}
+@utility bg-tint {
+  background: var(--color-mist);
+}
+
+/* --- type ------------------------------------------------------------------ */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+  &::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+}
+@utility display {
+  font-size: min(clamp(2.6rem, 1.45rem + 3.5vw, 4.6rem), 8.6svh);
+  font-weight: 300;
+  line-height: 1.03;
+  letter-spacing: -0.038em;
+}
+@utility h2 {
+  font-size: clamp(1.95rem, 1.35rem + 1.7vw, 2.75rem);
+  font-weight: 330;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+@utility h3 {
+  font-size: clamp(1.15rem, 1.05rem + 0.3vw, 1.3rem);
+  font-weight: 550;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+@utility lede {
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.62;
+  color: var(--color-ink-2);
+}
+@utility small {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-ink-3);
+}
+@utility num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* --- buttons and links ----------------------------------------------------- */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  padding-inline: 1.375rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease-soft),
+    border-color 0.2s var(--ease-soft),
+    color 0.2s var(--ease-soft);
+}
+@utility btn-gold {
+  background: var(--color-gold);
+  color: var(--color-navy);
+  &:hover {
+    background: var(--color-gold-hover);
+  }
+}
+@utility btn-navy {
+  background: var(--color-navy);
+  color: #fff;
+  &:hover {
+    background: var(--color-navy-mid);
+  }
+}
+@utility btn-line {
+  background: transparent;
+  border-color: var(--color-line-strong);
+  color: var(--color-navy);
+  &:hover {
+    border-color: var(--color-navy);
+    background: var(--color-mist);
+  }
+}
+@utility btn-glass {
+  background: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.45);
+  color: #fff;
+  &:hover {
+    background: rgb(255 255 255 / 0.14);
+    border-color: #fff;
+  }
+}
+/* a text link with an arrow: the underline arrives on hover, nothing moves */
+@utility link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.2s var(--ease-soft);
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+  & svg {
+    color: var(--color-gold-ink);
+  }
+}
+
+/* --- rules and plates ------------------------------------------------------ */
+@utility rule-top {
+  border-top: 1px solid var(--color-line);
+}
+@utility hairline {
+  border: 1px solid var(--color-line);
+}
+/* a picture filling its box, no rounding */
+@utility fill-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- the section head used down the page ----------------------------------- */
+.head {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+}
+.head-split {
+  display: grid;
+  gap: 1.25rem 3rem;
+  align-items: end;
+}
+@media (min-width: 64em) {
+  .head-split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  }
+}
+
+/* --- motion: arriving and leaving ------------------------------------------------------------------------------------
+   Load: the opening words "condense" out of a blur (Reddrok's entrance, his ask 2026-11-19): plain CSS, so a headline never
+   waits on a script; --d staggers them. Nothing animates on scroll.
+   Between pages: the browser's own cross-document view transition. The bar stays put (its own transition name); the old page
+   softens, blurs and lifts away, the new one settles in while its opening condenses. Browsers without it simply load the page. */
+@keyframes condense-in {
+  /* dialled down a touch at his word (2026-11-19: "a tiny bit too much"): Reddrok's 14px became 10px */
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.enter {
+  animation: condense-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* on scroll (src/scripts/condense.ts tags the elements and adds .is-in as each comes into view) */
+/* !important only while it plays: a component's own transition must not cut the fade short; the class is removed once it has
+   arrived, which hands the element its own transitions back */
+.condense {
+  opacity: 0 !important;
+  filter: blur(8px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.95s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition-delay: var(--d, 0s) !important;
+}
+.condense.is-in {
+  opacity: 1 !important;
+  filter: none;
+}
+
+@view-transition {
+  navigation: auto;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(-10px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+::view-transition-old(root) {
+  animation: page-out 0.42s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: page-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+/* the bar does not move between pages */
+::view-transition-group(bar),
+::view-transition-old(bar),
+::view-transition-new(bar) {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* long-form text (the privacy, cookie and terms pages): a readable measure, ruled H2s */
+.prose {
+  max-width: 46rem;
+  color: var(--color-ink-2);
+}
+.prose > * + * {
+  margin-top: 1rem;
+}
+.prose h2 {
+  margin-top: 2.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+  font-size: clamp(1.35rem, 1.2rem + 0.5vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.prose h3 {
+  margin-top: 1.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+.prose ul,
+.prose ol {
+  display: grid;
+  gap: 0.45rem;
+  padding-left: 1.25rem;
+}
+.prose ul {
+  list-style: square;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li::marker {
+  color: var(--color-gold-ink);
+}
+.prose a {
+  color: var(--color-navy);
+  text-underline-offset: 0.2em;
+}
+.prose strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* the regulatory warnings that sit beside an investment or mortgage line: always visible, never in a tooltip */
+.risk {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  border-left: 2px solid var(--color-gold);
+  background: var(--color-mist);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-ink-2);
+}

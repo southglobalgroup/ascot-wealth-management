@@ -1,0 +1,15 @@
+---
+import LegalPage from '../components/legal/LegalPage.astro'
+import { legal } from '../data/pages/legal'
+const d = legal['terms-of-use']
+---
+
+<LegalPage
+  title="Terms of Use | Ascot Wealth Management"
+  description="Please read these Terms of Use carefully before using the Ascot Wealth Management Ltd website. By accessing or using this website, you agree to be bound by these terms."
+  path="/terms-of-use"
+  heading={d.title}
+  updated={d.updated}
+  intro={d.intro}
+  blocks={d.blocks}
+/>

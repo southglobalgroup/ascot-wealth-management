@@ -1,0 +1,459 @@
+---
+/* One article page, for both kinds: an Articles & Insights article (/blog/<slug>) and a Market Intelligence update
+   (/market-updates/<stream>/<slug>). The page hero with the article's own title and its date, author and read time; then the
+   article in .prose (their words as scraped, regulatory notes boxed as .risk where they stand) beside two related articles (sticky on desktop);
+   then their own closing ("Ready to Take Action?" / "How does this affect your portfolio?"). Data: src/data/articles/*.json,
+   made by scripts/build-article-data.mjs from the scrape. */
+import Layout from '../../layouts/Layout.astro'
+import PageHero from '../PageHero.astro'
+import Closing from '../Closing.astro'
+import blogData from '../../data/articles/blog.json'
+import muData from '../../data/articles/market-updates.json'
+
+type Cover = { src: string; w: number; h: number; small: string; sw: number } | null
+type Cta = { title: string; text: string; button: string } | null
+export type BlogArticle = {
+  slug: string
+  path: string
+  title: string
+  docTitle: string
+  description: string
+  date: string
+  iso: string
+  author: string
+  read: string
+  cat: string
+  excerpt: string
+  cover: Cover
+  body: string
+  cta: Cta
+  related: string[]
+}
+export type Update = {
+  slug: string
+  stream: string
+  streamLabel: string
+  path: string
+  title: string
+  docTitle: string
+  description: string
+  tag: string
+  badges: string[]
+  date: string
+  iso: string
+  dateShort: string
+  read: string
+  back: string
+  lede: string[]
+  intro: string
+  sections: { heading: string; html: string; risk: boolean }[]
+  extras: string[]
+  hook: string
+  sources: { text: string; href: string }[]
+  notice: string
+  relatedTitle: string
+  allLabel: string
+  cta: Cta
+  related: string[]
+}
+
+type Props = { kind: 'blog' | 'update'; slug: string }
+const { kind, slug } = Astro.props
+const blog = blogData as BlogArticle[]
+const updates = muData as Update[]
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+type Rel = { href: string; title: string; tag: string; date: string; img?: string; imgW?: number }
+let page: {
+  title: string
+  docTitle: string
+  description: string
+  path: string
+  crumbs: { label: string; href?: string }[]
+  eyebrow?: string
+  lede?: string
+  meta: string[]
+  iso: string
+  cover: Cover
+  body: string
+  back: { label: string; href: string }
+  relatedTitle: string
+  related: Rel[]
+  closing: { eyebrow: string; title: string; text: string; button: string }
+}
+
+if (kind === 'blog') {
+  const a = blog.find((b) => b.slug === slug)!
+  page = {
+    title: a.title,
+    docTitle: a.docTitle,
+    description: a.description,
+    path: a.path,
+    crumbs: [{ label: 'Articles & Insights', href: '/blog' }, { label: a.title }],
+    eyebrow: a.cat || undefined,
+    meta: [a.date, a.author, a.read].filter(Boolean),
+    iso: a.iso,
+    cover: a.cover,
+    body: a.body,
+    back: { label: 'Back to Articles', href: '/blog' },
+    relatedTitle: 'Related Articles',
+    related: a.related
+      .map((s) => blog.find((b) => b.slug === s))
+      .filter((b): b is BlogArticle => !!b)
+      .map((b) => ({ href: b.path, title: b.title, tag: b.cat, date: b.date, img: b.cover?.small, imgW: b.cover?.sw })),
+    closing: {
+      eyebrow: 'Contact',
+      title: a.cta?.title || 'Ready to Take Action?',
+      text: a.cta?.text || "Let's discuss how we can help you achieve your financial goals.",
+      button: a.cta?.button || 'Schedule a Consultation',
+    },
+  }
+} else {
+  const u = updates.find((x) => x.slug === slug)!
+  const parts: string[] = []
+  for (const s of u.sections) {
+    const block = `<h2>${esc(s.heading)}</h2>${s.html}`
+    parts.push(s.risk ? `<div class="art__riskcard">${block}</div>` : block)
+  }
+  parts.push(...u.extras)
+  if (u.hook) parts.push(`<p class="art__hook">${u.hook}</p>`)
+  if (u.sources.length)
+    parts.push(
+      `<h2>Sources</h2><ul class="art__sources">${u.sources.map((s) => `<li><a href="${esc(s.href)}" rel="noopener nofollow">${esc(s.text)}</a></li>`).join('')}</ul>`,
+    )
+  if (u.notice) parts.push(`<div class="risk art__notice">${u.notice}</div>`)
+  page = {
+    title: u.title,
+    docTitle: u.docTitle,
+    description: u.description,
+    path: u.path,
+    crumbs: [
+      { label: 'Market Intelligence', href: '/market-updates' },
+      { label: u.streamLabel, href: `/market-updates?stream=${u.stream}` },
+      { label: u.title },
+    ],
+    eyebrow: u.tag,
+    lede: u.lede[0],
+    meta: [u.date, u.read, ...u.badges.filter((b) => b.toLowerCase() !== u.tag.toLowerCase() && !b.toLowerCase().startsWith(u.stream))],
+    iso: u.iso,
+    cover: null,
+    body: [u.intro, ...parts].join(''),
+    back: { label: u.allLabel || 'View all updates', href: `/market-updates?stream=${u.stream}` },
+    relatedTitle: u.relatedTitle || 'More updates',
+    related: u.related
+      .map((s) => updates.find((x) => x.slug === s))
+      .filter((x): x is Update => !!x)
+      .map((x) => ({ href: x.path, title: x.title, tag: x.tag, date: x.dateShort || x.date })),
+    closing: {
+      eyebrow: 'Market Intelligence',
+      title: u.cta?.title || 'How does this affect your portfolio?',
+      text: u.cta?.text || 'Our advisers can provide personalised context linked to your specific holdings and risk profile.',
+      button: u.cta?.button || 'Speak to an adviser',
+    },
+  }
+}
+const [first, ...restMeta] = page.meta
+---
+
+<Layout title={page.docTitle} description={page.description} path={page.path}>
+  <PageHero crumbs={page.crumbs} eyebrow={page.eyebrow} title={page.title} lede={page.lede}>
+    <p class="art__meta enter" style="--d:0.28s">
+      <time datetime={page.iso || undefined}>{first}</time>
+      {restMeta.map((m) => <span>{m}</span>)}
+    </p>
+  </PageHero>
+
+  <section class="section art" aria-label="Article">
+    <div class="wrap art__in">
+      <div class="art__main">
+        {
+          page.cover && (
+            <div class="art__cover">
+              <img
+                src={page.cover.src}
+                srcset={`${page.cover.small} ${page.cover.sw}w, ${page.cover.src} ${page.cover.w}w`}
+                sizes="(min-width: 48em) 736px, 100vw"
+                width={page.cover.w}
+                height={page.cover.h}
+                alt=""
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+          )
+        }
+        <div class="prose art__body" set:html={page.body} />
+        <p class="art__back">
+          <a class="link-arrow" href={page.back.href}>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13 8H3.5M7.5 4l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            {page.back.label}
+          </a>
+        </p>
+      </div>
+
+      {
+        page.related.length > 0 && (
+          <aside class="art__aside" aria-labelledby="art-related">
+            <h2 id="art-related" class="art__aside-h">
+              {page.relatedTitle}
+            </h2>
+            <ul role="list" class="art__rel">
+              {/* two, at his word (2026-11-19), so the column stays short enough to ride along as the reader scrolls */}
+              {page.related.slice(0, 2).map((r) => (
+                <li>
+                  <a class="art__rel-link" href={r.href}>
+                    {r.img && (
+                      <span class="art__rel-img">
+                        <img src={r.img} width={r.imgW} height={Math.round((r.imgW ?? 640) * 0.5625)} alt="" loading="lazy" decoding="async" />
+                      </span>
+                    )}
+                    <span class="art__rel-meta">
+                      {r.tag && <span class="art__rel-tag">{r.tag}</span>}
+                      <span class="num">{r.date}</span>
+                    </span>
+                    <span class="art__rel-title">{r.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+  </section>
+
+  <Closing eyebrow={page.closing.eyebrow} title={page.closing.title} text={page.closing.text} actions={[{ label: page.closing.button, href: '/contact' }]} />
+</Layout>
+
+<style>
+  .art__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0;
+    font-size: 0.875rem;
+    color: var(--color-ink-3);
+  }
+  .art__meta > * + *::before {
+    content: '·';
+    margin-inline: 0.65rem;
+    color: var(--color-line-strong);
+  }
+
+  .art__in {
+    display: grid;
+    gap: 3.5rem;
+  }
+  @media (min-width: 64em) {
+    .art__in {
+      grid-template-columns: minmax(0, 46rem) minmax(0, 18rem);
+      justify-content: space-between;
+      gap: 4rem;
+    }
+  }
+  .art__main {
+    min-width: 0;
+  }
+  .art__cover {
+    max-width: 46rem;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+    background: var(--color-mist-2);
+  }
+  .art__cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* the article's own HTML: set:html, so the rules reach it through :global */
+  .art__body {
+    overflow-wrap: break-word;
+  }
+  .art__body > :global(:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .art__body :global(h2),
+  .art__body :global(h3) {
+    line-height: 1.3;
+  }
+  .art__body :global(h4) {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .art__body :global(blockquote) {
+    padding: 0.25rem 0 0.25rem 1.1rem;
+    border-left: 2px solid var(--color-gold);
+    color: var(--color-ink);
+  }
+  .art__body :global(blockquote > * + *) {
+    margin-top: 0.75rem;
+  }
+  .art__body :global(li > ul),
+  .art__body :global(li > ol) {
+    margin-top: 0.45rem;
+  }
+  .art__body :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .art__body :global(th),
+  .art__body :global(td) {
+    padding: 0.6rem 1rem 0.6rem 0;
+    border-bottom: 1px solid var(--color-line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .art__body :global(th) {
+    font-weight: 600;
+    color: var(--color-ink);
+    border-bottom-color: var(--color-line-strong);
+  }
+  .art__body :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    margin-block: 2rem;
+  }
+  .art__body :global(a) {
+    overflow-wrap: anywhere;
+  }
+  .art__body :global(.risk) {
+    margin-top: 1.5rem;
+  }
+  .art__body :global(.risk p) {
+    margin: 0;
+  }
+  .art__body :global(.risk > div > * + *) {
+    margin-top: 0.6rem;
+  }
+  .art__body :global(.risk hr) {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    margin-block: 0.75rem;
+  }
+  .art__body :global(.art__riskcard .risk) {
+    background: var(--color-paper);
+  }
+  .art__body :global(.art__riskcard) {
+    margin-top: 2.75rem;
+    padding: 1.4rem 1.5rem 1.5rem;
+    border-left: 2px solid var(--color-gold);
+    background: var(--color-mist);
+  }
+  .art__body :global(.art__riskcard h2) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .art__body :global(.art__riskcard > * + *) {
+    margin-top: 1rem;
+  }
+  .art__body :global(.art__riskcard + h2) {
+    margin-top: 2.75rem;
+  }
+  .art__body :global(.art__hook) {
+    margin-top: 2.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 1.0625rem;
+    color: var(--color-ink);
+  }
+  .art__body :global(.art__sources) {
+    font-size: 0.9375rem;
+  }
+  .art__body :global(.art__notice) {
+    display: block;
+    margin-top: 2.5rem;
+  }
+
+  .art__back {
+    margin-top: 2.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .art__aside {
+    align-self: start;
+    border-top: 2px solid var(--color-gold);
+    padding-top: 1.1rem;
+  }
+  /* beside the article on desktop it stays in view under the bar while the article scrolls (his ask, 2026-11-19) */
+  @media (min-width: 64em) {
+    .art__aside {
+      position: sticky;
+      top: calc(var(--bar-h) + 1.5rem);
+    }
+  }
+  .art__aside-h {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .art__rel {
+    display: grid;
+    margin-top: 0.5rem;
+  }
+  @media (min-width: 40em) and (max-width: 63.99em) {
+    .art__rel {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 1.75rem;
+    }
+  }
+  .art__rel li {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .art__rel-link {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1.1rem;
+    text-decoration: none;
+  }
+  .art__rel-img {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+    background: var(--color-mist-2);
+  }
+  .art__rel-img img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .art__rel-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-3);
+  }
+  .art__rel-tag {
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .art__rel-title {
+    font-size: 0.9375rem;
+    font-weight: 550;
+    line-height: 1.4;
+    color: var(--color-navy);
+    overflow-wrap: anywhere;
+  }
+  .art__rel-link:hover .art__rel-title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+</style>

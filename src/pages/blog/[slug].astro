@@ -1,0 +1,12 @@
+---
+/* An Articles & Insights article, at the live site's own address (/blog/<slug>). Data: src/data/articles/blog.json. */
+import Article from '../../components/articles/Article.astro'
+import articles from '../../data/articles/blog.json'
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug } }))
+}
+const { slug } = Astro.params
+---
+
+<Article kind="blog" slug={slug} />

@@ -1,0 +1,77 @@
+---
+/* OUR TEAM: their four advisers, their own studio portraits, named. Under hero D (which opens with "Advice from people who know
+   you.") the heading is their Our Team page's own, "Meet Our Expert Team". */
+import { Image } from 'astro:assets'
+import { team as t, teamAlt } from '../../data/home'
+type Props = { heroHasTitle?: boolean }
+const { heroHasTitle = false } = Astro.props
+---
+
+<section class="section tm" aria-labelledby="tm-title">
+  <div class="wrap">
+    <div class="tm__head">
+      <div class="head">
+        <p class="eyebrow">{t.eyebrow}</p>
+        <h2 id="tm-title" class="h2">{heroHasTitle ? teamAlt.title : t.title}</h2>
+      </div>
+      <a class="link-arrow" href={t.link.href}>
+        {t.link.label}
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+      </a>
+    </div>
+    <ul class="tm__grid" role="list">
+      {
+        t.people.map((p) => (
+          <li>
+            <div class="tm__photo">
+              <Image src={p.img} alt={p.name} widths={[320, 480]} sizes="(min-width: 64em) 280px, 45vw" class="fill-img" />
+            </div>
+            <p class="tm__name">{p.name}</p>
+            <p class="tm__role">{p.role}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .tm__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+  }
+  .tm__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.25rem;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  @media (min-width: 64em) {
+    .tm__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+  .tm__photo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-navy-deep);
+    margin-bottom: 1rem;
+  }
+  .tm__name {
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .tm__role {
+    margin-top: 0.15rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+</style>

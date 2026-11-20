@@ -1,0 +1,252 @@
+---
+/* ARTICLES & INSIGHTS: their whole article index, newest first. The newest leads with its cover, the next four sit beneath it as
+   cards, and the rest follow as a ruled list (shown 24 at a time once script runs; all of them without it). Every article opens on
+   the live site until the article pages are built. */
+import { Image } from 'astro:assets'
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { intro, articles } from '../data/pages/blog'
+import { contact } from '../data/home'
+
+const [lead, ...rest] = articles
+const cards = rest.slice(0, 4)
+const list = rest.slice(4)
+const BATCH = 24
+---
+
+<Layout title="Articles & Insights | AWM - Ascot Wealth Management" description={intro.lede} path="/blog">
+  <PageHero crumbs={[{ label: 'Resources', href: '/resources' }, { label: intro.title }]} title={intro.title} lede={intro.lede} />
+
+  <section class="section bl" aria-label="Articles">
+    <div class="wrap">
+      <article class="bl__lead">
+        <a class="bl__lead-link" href={lead.href}>
+          <div class="bl__img bl__img--lead">
+            {lead.img && <Image src={lead.img} alt="" widths={[560, 840, 1280]} sizes="(min-width: 64em) 680px, 100vw" loading="eager" class="fill-img" />}
+          </div>
+          <div class="bl__lead-words">
+            <p class="bl__meta">
+              {lead.cat && <span class="bl__tag">{lead.cat}</span>}
+              <time class="num">{lead.date}</time>
+            </p>
+            <h2 class="bl__lead-title">{lead.title}</h2>
+            {lead.excerpt && <p>{lead.excerpt}</p>}
+            <p class="small">{lead.author} · {lead.read}</p>
+            <span class="link-arrow">
+              {intro.cta}
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <ul class="bl__cards" role="list">
+        {
+          cards.map((a) => (
+            <li>
+              <a class="bl__card" href={a.href}>
+                <div class="bl__img">{a.img && <Image src={a.img} alt="" widths={[400, 640]} sizes="(min-width: 64em) 290px, (min-width: 40em) 50vw, 100vw" class="fill-img" />}</div>
+                <p class="bl__meta">
+                  {a.cat && <span class="bl__tag">{a.cat}</span>}
+                  <time class="num">{a.date}</time>
+                </p>
+                <h2 class="bl__title">{a.title}</h2>
+                {a.excerpt && <p class="bl__excerpt">{a.excerpt}</p>}
+                <p class="small">
+                  {a.author} · {a.read}
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <ol class="bl__list" role="list" data-more-list>
+        {
+          list.map((a, i) => (
+            <li class="bl__row" data-batch={Math.floor(i / BATCH)}>
+              <p class="bl__meta bl__meta--row">
+                <time class="num">{a.date}</time>
+                {a.cat && <span class="bl__tag">{a.cat}</span>}
+              </p>
+              <div class="bl__row-words">
+                <h2 class="bl__title">
+                  <a href={a.href}>{a.title}</a>
+                </h2>
+                {a.excerpt && <p class="bl__excerpt">{a.excerpt}</p>}
+              </div>
+              <p class="small bl__row-read">
+                {a.author} · {a.read}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="bl__more" data-more-wrap data-off>
+        <button type="button" class="btn btn-line" data-more>Show more articles</button>
+        <p class="small num" data-more-count></p>
+      </div>
+    </div>
+  </section>
+
+  <Closing eyebrow={contact.eyebrow} title={contact.title} text={contact.lede} actions={[{ label: contact.cta, href: '/contact' }]} />
+</Layout>
+
+<script>
+  const list = document.querySelector<HTMLElement>('[data-more-list]')
+  const wrap = document.querySelector<HTMLElement>('[data-more-wrap]')
+  const btn = document.querySelector<HTMLButtonElement>('[data-more]')
+  const count = document.querySelector<HTMLElement>('[data-more-count]')
+  if (list && wrap && btn && count) {
+    const rows = [...list.querySelectorAll<HTMLElement>('[data-batch]')]
+    let shown = 1
+    const render = () => {
+      rows.forEach((r) => r.toggleAttribute('data-off', Number(r.dataset.batch) >= shown))
+      const visible = rows.filter((r) => !r.hasAttribute('data-off')).length
+      count.textContent = `${visible + 5} of ${rows.length + 5}`
+      wrap.toggleAttribute('data-off', visible === rows.length)
+    }
+    btn.addEventListener('click', () => {
+      const first = rows.find((r) => Number(r.dataset.batch) === shown)
+      shown += 1
+      render()
+      first?.querySelector('a')?.focus()
+    })
+    render()
+  }
+</script>
+
+<style>
+  .bl__lead-link {
+    display: grid;
+    gap: 1.5rem 3rem;
+    text-decoration: none;
+  }
+  @media (min-width: 56em) {
+    .bl__lead-link {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+  .bl__img {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  .bl__lead-words {
+    display: grid;
+    gap: 0.9rem;
+    align-content: center;
+  }
+  .bl__lead-title {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+    font-weight: 330;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+  }
+  .bl__lead-link:hover .bl__lead-title,
+  .bl__card:hover .bl__title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  .bl__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-3);
+  }
+  .bl__tag {
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .bl__cards {
+    display: grid;
+    gap: 2.5rem 1.75rem;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--color-line);
+  }
+  @media (min-width: 40em) {
+    .bl__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .bl__cards {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .bl__card {
+    display: grid;
+    align-content: start;
+    gap: 0.7rem;
+    text-decoration: none;
+  }
+  .bl__card .bl__img {
+    margin-bottom: 0.35rem;
+  }
+  .bl__title {
+    font-size: 1.0625rem;
+    font-weight: 550;
+    line-height: 1.38;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+  .bl__excerpt {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+  .bl__list {
+    display: grid;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    border-top: 1px solid var(--color-line);
+  }
+  .bl__row {
+    display: grid;
+    gap: 0.6rem 2.5rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .bl__row[data-off],
+  .bl__more[data-off] {
+    display: none;
+  }
+  @media (min-width: 56em) {
+    .bl__row {
+      grid-template-columns: 10rem minmax(0, 1fr) 12.5rem;
+      align-items: baseline;
+    }
+    .bl__meta--row {
+      flex-direction: column;
+    }
+    .bl__row-read {
+      text-align: right;
+    }
+  }
+  .bl__row-words {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 46rem;
+  }
+  .bl__row .bl__title a {
+    text-decoration: none;
+  }
+  .bl__row .bl__title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  .bl__more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 2.5rem;
+  }
+</style>

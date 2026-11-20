@@ -1,0 +1,127 @@
+---
+/* The opening of every inner page: white, a breadcrumb, the eyebrow, the page's own H1 and lede (their words), its actions, and
+   optionally one of their pictures on the right. Sized to its content (the four-option, full-screen heroes are the home page's). */
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+type Crumb = { label: string; href?: string }
+type Action = { label: string; href: string; kind?: 'gold' | 'line' }
+type Props = {
+  crumbs?: Crumb[]
+  eyebrow?: string
+  title: string
+  lede?: string
+  image?: ImageMetadata
+  alt?: string
+  actions?: Action[]
+  tint?: boolean
+}
+const { crumbs = [], eyebrow, title, lede, image, alt = '', actions = [], tint = false } = Astro.props
+const trail: Crumb[] = [{ label: 'Home', href: '/' }, ...crumbs]
+---
+
+<section class:list={['ph', { 'ph--img': image, 'bg-tint': tint }]} aria-labelledby="page-title">
+  <div class="wrap ph__in">
+    <div class="ph__copy">
+      <nav class="ph__crumbs enter" aria-label="Breadcrumb">
+        <ol role="list">
+          {
+            trail.map((c, i) => (
+              <li>
+                {c.href && i < trail.length - 1 ? <a href={c.href}>{c.label}</a> : <span aria-current={i === trail.length - 1 ? 'page' : undefined}>{c.label}</span>}
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      {eyebrow && <p class="eyebrow enter" style="--d:0.05s">{eyebrow}</p>}
+      <h1 id="page-title" class="ph__title enter" style="--d:0.12s">{title}</h1>
+      {lede && <p class="lede ph__lede enter" style="--d:0.22s">{lede}</p>}
+      {
+        actions.length > 0 && (
+          <div class="ph__actions enter" style="--d:0.32s">
+            {actions.map((a) => (
+              <a class={`btn ${a.kind === 'line' ? 'btn-line' : 'btn-gold'}`} href={a.href}>
+                {a.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <slot />
+    </div>
+    {
+      image && (
+        <div class="ph__media enter" style="--d:0.18s">
+          <Image src={image} alt={alt} widths={[560, 840, 1120]} sizes="(min-width: 64em) 520px, 100vw" loading="eager" fetchpriority="high" class="fill-img" />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .ph {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .ph__in {
+    display: grid;
+    gap: 2.5rem 4rem;
+    align-items: center;
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5.5rem);
+  }
+  @media (min-width: 64em) {
+    .ph--img .ph__in {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    }
+  }
+  .ph__copy {
+    display: grid;
+    gap: 1.15rem;
+    max-width: 46rem;
+  }
+  .ph__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    color: var(--color-ink-3);
+  }
+  .ph__crumbs li + li::before {
+    content: '/';
+    margin-right: 0.4rem;
+    color: var(--color-line-strong);
+  }
+  .ph__crumbs a {
+    text-decoration: none;
+  }
+  .ph__crumbs a:hover {
+    color: var(--color-navy);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .ph__crumbs [aria-current] {
+    color: var(--color-ink-2);
+  }
+  .ph__title {
+    font-size: clamp(2.3rem, 1.5rem + 2.6vw, 3.6rem);
+    font-weight: 300;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+  }
+  .ph__lede {
+    max-width: 40rem;
+  }
+  .ph__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+  .ph__media {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+</style>

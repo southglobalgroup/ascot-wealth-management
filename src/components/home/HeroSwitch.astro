@@ -1,0 +1,70 @@
+---
+/* Review only (site.heroSwitcher): a small bar in the corner to move between the hero options on the site: C (the home page) and D.
+   Gone once one is chosen. (A and B are off the site for now; their entries would be { k: 'a', href: '/hero/a' } and the like.) */
+type Props = { current: string }
+const { current } = Astro.props
+const opts = [
+  { k: 'c', name: 'Sunset film', href: '/' },
+  { k: 'd', name: 'Dusk film', href: '/hero/d' },
+  { k: 'e', name: 'Autumn estate', href: '/hero/e' },
+  { k: 'f', name: 'London twilight', href: '/hero/f' },
+  { k: 'g', name: 'Estate band', href: '/hero/g' },
+  { k: 'h', name: 'Gallery print', href: '/hero/h' },
+  { k: 'i', name: 'Manor and card', href: '/hero/i' },
+  { k: 'j', name: 'Triptych', href: '/hero/j' },
+] as const
+---
+
+<nav class="hs" aria-label="Hero options (review only)">
+  <span class="hs__label">Hero</span>
+  {
+    opts.map((o) => (
+      <a href={o.href} aria-current={o.k === current ? 'page' : undefined} title={`Option ${o.k.toUpperCase()}: ${o.name}`}>
+        {o.k.toUpperCase()}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .hs {
+    position: fixed;
+    left: max(1rem, env(safe-area-inset-left, 0px));
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    background: var(--color-navy-deep);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px -12px rgb(1 24 59 / 0.5);
+  }
+  .hs__label {
+    padding-inline: 0.6rem 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.6);
+  }
+  .hs a {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: background-color 0.2s var(--ease-soft);
+  }
+  .hs a:hover {
+    background: rgb(255 255 255 / 0.1);
+  }
+  .hs a[aria-current='page'] {
+    background: var(--color-gold);
+    color: var(--color-navy);
+  }
+</style>

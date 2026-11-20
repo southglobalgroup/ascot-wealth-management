@@ -1,0 +1,17 @@
+---
+/* /staff, "Meet Our Expert Team": the team as a portrait grid, then their careers notice (#careers), then their closing words. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import People from '../components/staff/People.astro'
+import Careers from '../components/staff/Careers.astro'
+import room from '../assets/img/consultation-room.webp'
+import { staffPage as s } from '../data/pages/staff'
+---
+
+<Layout title={s.title} description={s.description} path="/staff">
+  <PageHero crumbs={[{ label: 'Our Team' }]} eyebrow={s.hero.eyebrow} title={s.hero.title} lede={s.hero.lede} />
+  <People />
+  <Careers />
+  <Closing title={s.closing.title} text={s.closing.text} actions={s.closing.actions} image={room} alt="A quiet consultation room with a fireplace and a long wooden table" />
+</Layout>

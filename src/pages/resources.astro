@@ -1,0 +1,212 @@
+---
+/* RESOURCES, "Six intelligence streams. Updated weekly.": the six streams as a numbered, ruled grid (each opens the market-intelligence
+   index on its stream), the weekly-update sign-up (no mailing list exists yet, so it says to email instead of pretending to send),
+   then "More from AWM". */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { meta, intro, streams, subscribe, more } from '../data/pages/resources'
+import { contact } from '../data/home'
+import { site } from '../data/site'
+---
+
+<Layout title={meta.title} description={meta.description} path="/resources">
+  <PageHero crumbs={[{ label: 'Resources' }]} eyebrow={intro.eyebrow} title={intro.title} lede={intro.lede} />
+
+  <section class="section" aria-label="Intelligence streams">
+    <div class="wrap">
+      <ol class="rs" role="list">
+        {
+          streams.map((s, i) => (
+            <li class="rs__item">
+              <p class="num rs__n">{String(i + 1).padStart(2, '0')}</p>
+              <h2 class="rs__name">{s.name}</h2>
+              <p class="rs__text">{s.text}</p>
+              <p class="small num rs__date">{s.updated}</p>
+              <a class="link-arrow" href={s.href}>
+                {s.cta}
+                <span class="sr-only"> {s.name}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-tint" aria-labelledby="sub-title">
+    <div class="wrap sub">
+      <div class="head">
+        <h2 id="sub-title" class="h2">{subscribe.title}</h2>
+        <p class="lede">{subscribe.text}</p>
+      </div>
+      <div>
+        <form class="sub__form" data-subscribe novalidate>
+          <label class="sub__label" for="sub-email">Email address</label>
+          <div class="sub__row">
+            <input id="sub-email" name="email" type="email" autocomplete="email" required class="sub__input" />
+            <button type="submit" class="btn btn-gold">{subscribe.cta}</button>
+          </div>
+        </form>
+        <p class="sub__notice" data-subscribe-notice role="status" aria-live="polite" data-off>
+          The weekly email list is not open online yet. To receive the updates, email <a href={`mailto:${site.email}?subject=Weekly%20updates`}>{site.email}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="more-title">
+    <div class="wrap">
+      <h2 id="more-title" class="eyebrow">{more.title}</h2>
+      <ul class="mo" role="list">
+        {
+          more.items.map((m) => (
+            <li class="mo__item">
+              <h3 class="h3">{m.title}</h3>
+              <p>{m.text}</p>
+              <a class="link-arrow" href={m.href}>
+                {m.cta}
+                <span class="sr-only"> {m.title}</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Closing eyebrow={contact.eyebrow} title={contact.title} text={contact.lede} actions={[{ label: contact.cta, href: '/contact' }]} />
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
+    const notice = form.parentElement?.querySelector<HTMLElement>('[data-subscribe-notice]')
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      notice?.removeAttribute('data-off')
+    })
+  })
+</script>
+
+<style>
+  .rs {
+    display: grid;
+    border-top: 1px solid var(--color-line);
+  }
+  .rs__item {
+    display: grid;
+    align-content: start;
+    gap: 0.7rem;
+    padding: 1.75rem 0 2rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 44em) {
+    .rs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2.5rem;
+    }
+  }
+  @media (min-width: 64em) {
+    .rs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 3.5rem;
+    }
+    .rs__item {
+      padding: 2.25rem 0 2.5rem;
+    }
+  }
+  .rs__n {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .rs__name {
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.95rem);
+    font-weight: 330;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .rs__text {
+    max-width: 24rem;
+  }
+  .rs__date {
+    margin-top: 0.15rem;
+  }
+
+  .sub {
+    display: grid;
+    gap: 2rem 4rem;
+    align-items: end;
+  }
+  @media (min-width: 64em) {
+    .sub {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+  .sub__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .sub__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .sub__input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+    font: inherit;
+    color: var(--color-ink);
+  }
+  .sub__input:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 1px;
+    border-color: var(--color-navy);
+  }
+  .sub__notice {
+    margin-top: 1rem;
+    padding: 0.75rem 0.9rem;
+    border-left: 2px solid var(--color-gold);
+    background: var(--color-paper);
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+  }
+  .sub__notice[data-off] {
+    display: none;
+  }
+  .sub__notice a {
+    color: var(--color-navy);
+    font-weight: 600;
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
+  }
+
+  .mo {
+    display: grid;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .mo__item {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: 1.5rem 0 1.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 56em) {
+    .mo {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 3rem;
+    }
+  }
+</style>

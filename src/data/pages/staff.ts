@@ -1,0 +1,86 @@
+/* /staff, "Meet Our Expert Team": every word from ascotwm.com/staff (rendered 2026-11-19). Each person's name, role, line,
+   VouchedFor rating and areas of focus are as their card shows them; the card's own quotation marks are drawn by the page.
+   `id` is the address the testimonials page links to (/staff#mark-insley) and the portrait's file name in assets/img/staff. */
+
+export type Person = { id: string; name: string; role: string; quote?: string; rating?: string; reviews?: string; focus?: string[] }
+
+export const staffPage = {
+  title: 'Meet Our Team | AWM - Ascot Wealth Management',
+  description:
+    'Our experienced financial advisers are dedicated to helping you grow, protect, and preserve your wealth with personalized solutions tailored to your goals.',
+  hero: {
+    eyebrow: 'Our Team',
+    title: 'Meet Our Expert Team',
+    lede: 'Our experienced financial advisers are dedicated to helping you grow, protect, and preserve your wealth with personalized solutions tailored to your goals.',
+  },
+  team: { eyebrow: 'Our People', title: 'Meet the Team' },
+  careers: {
+    eyebrow: 'Join Our Team',
+    title: 'Career Opportunities',
+    status: 'No Current Openings',
+    text: [
+      "We don't have any open roles at the moment, but we're always interested in connecting with talented individuals.",
+      "If you'd like to be considered for future opportunities, you're welcome to submit your CV and we'll be in touch when a suitable role becomes available.",
+    ],
+    cta: 'Submit Your CV',
+    note: 'Future opportunities will be listed here as they become available.',
+  },
+  closing: {
+    title: 'Ready to Meet Your Financial Adviser?',
+    text: 'Schedule a free consultation with any of our team members to discuss your financial goals and how we can help you achieve them.',
+    actions: [
+      { label: 'Schedule Free Consultation', href: '/contact' },
+      { label: 'View Our Services', href: '/services', kind: 'line' as const },
+    ],
+  },
+}
+
+export const people: Person[] = [
+  { id: "mark-insley", name: "Mark Insley", role: "Founder & Director", quote: "Leading Ascot Wealth Management with vision and expertise", rating: "4.8", reviews: "696 reviews", focus: ["Strategic Leadership", "Investment Management", "Client Relations"] },
+  { id: "claire-calder", name: "Claire Calder", role: "Wealth Manager", quote: "Tailored solutions for your unique financial needs", rating: "4.8", reviews: "108 reviews", focus: ["Protection Planning", "Investment Advice", "Estate Planning"] },
+  { id: "catriona-mccarron", name: "Catriona McCarron", role: "Wealth Manager", quote: "Acting with trust and integrity to meet your financial objectives", rating: "4.8", reviews: "351 reviews", focus: ["Retirement Planning", "Pension Advice", "Tax Planning"] },
+  { id: "greg-armstrong", name: "Greg Armstrong", role: "Global Wealth Manager", quote: "Expert financial guidance for every stage of your journey", rating: "4.9", reviews: "40 reviews", focus: ["Wealth Planning", "Investment Strategy", "Portfolio Management"] },
+  { id: "nwabisa-janda", name: "Nwabisa Janda", role: "Mortgage Adviser", quote: "Finding you the best possible rates for all your mortgage needs", focus: ["Mortgage Advisory", "Property Finance", "First-Time Buyers"] },
+  { id: "steve-coates", name: "Steve Coates", role: "Financial Adviser", quote: "Providing clear, strategic financial advice aligned to your goals and long-term security.", focus: ["Holistic financial planning and advice", "Investment and portfolio strategy", "Risk"] },
+  { id: "nasheetah-abrahams", name: "Nasheetah Abrahams", role: "Human Resources, Integration & Operations Manager", quote: "Supporting our team and culture", focus: ["HR Management", "Office Operations", "Team Development"] },
+  { id: "dextter-roberts", name: "Dextter Roberts", role: "Junior Financial Adviser", quote: "Supporting clients and advisers through structured, informed financial guidance.", focus: ["Client onboarding and data gathering", "Basic financial analysis and planning support", "Client communication and meeting preparation"] },
+  { id: "guille-oflaherty", name: "Guille O'Flaherty", role: "Chief Operating Officer", quote: "Driving operational excellence across all services", focus: ["Operations Management", "Business Strategy", "Mergers & Acquisitions"] },
+  { id: "stephen-matthews", name: "Stephen Matthews", role: "Head of Operations, Product & Compliance", quote: "Maintaining the highest standards in operations and compliance", focus: ["Compliance Management", "Operations", "Risk Management"] },
+  { id: "laura-goult", name: "Laura Goult", role: "Estate Planning Adviser", quote: "Comprehensive estate planning for your legacy", focus: ["Estate Planning", "Trust Management", "Wealth Transfer"] },
+  { id: "rob-agnew", name: "Rob Agnew", role: "Adviser Competency Supervisor", quote: "Ensuring excellence in financial advisory standards", focus: ["Advisory Supervision", "Compliance", "Professional Development"] },
+  { id: "colin-reed", name: "Colin Reed", role: "Head of Systems, Automations & Agentics", quote: "Supporting businesses with strategic financial solutions", focus: ["Business Planning", "Corporate Finance", "Enterprise Management"] },
+  { id: "michael-morris", name: "Michael Morris", role: "Trainee Financial Adviser", quote: "Supporting comprehensive wealth management services", focus: ["Client Support", "Wealth Management", "Financial Coordination"] },
+  { id: "james-croker", name: "James Croker", role: "Trainee Financial Adviser", quote: "Building expertise to serve your financial needs", focus: ["Wealth Management", "Financial Planning", "Investment Strategy"] },
+  { id: "sam-hallett", name: "Sam Hallett", role: "Portfolio Co-Manager", quote: "Strategic portfolio management for optimal performance", focus: ["Portfolio Management", "Asset Allocation", "Market Analysis"] },
+  { id: "jessica-mandry", name: "Jessica Mandry", role: "Operations & Administrative Assistant", quote: "Ensuring smooth operations and exceptional service", focus: ["Operations Support", "Administration", "Client Coordination"] },
+  { id: "zubayr-fish", name: "Zubayr Fish", role: "Compliance Associate", quote: "Maintaining regulatory excellence", focus: ["Compliance", "Regulatory Affairs", "Risk Management"] },
+  { id: "emmanuel-taiwo", name: "Emmanuel Taiwo", role: "Paralegal", quote: "Providing legal support and expertise", focus: ["Legal Support", "Documentation", "Compliance"] },
+  { id: "chenise-henry-edwards", name: "Chenise Henry-Edwards", role: "Paraplanner", quote: "Supporting advisers with accurate, compliant, and client-ready financial planning.", focus: ["Financial research & analysis", "Paraplanning and report preparation", "Compliant"] },
+  { id: "eesaa-adams", name: "Eesaa Adams", role: "Digital Content Creator", quote: "Creating engaging digital content", focus: ["Content Creation", "Digital Marketing", "Social Media"] },
+  { id: "ashley-chiutare", name: "Ashley Chiutare", role: "Paraplanner", quote: "Committed to excellence, inspired by purpose.", focus: ["Financial research & analysis", "Paraplanning and report preparation", "Compliant"] },
+  { id: "yaaseen-francis", name: "Yaaseen Francis", role: "Junior Paraplanner", quote: "Supporting comprehensive financial planning", focus: ["Paraplanning", "Research", "Documentation"] },
+  { id: "shema-fiacre", name: "Shema Fiacre", role: "Automation & Data Specialist", quote: "Leveraging technology for efficiency", focus: ["Automation", "Data Analysis", "Technology"] },
+  { id: "jody-moses", name: "Jody Moses", role: "Junior Automation & Data Specialist", quote: "Driving data-driven solutions", focus: ["Data Management", "Automation", "Analytics"] },
+  { id: "tumisang-filane", name: "Tumisang Filane", role: "Automation & Data Specialist", quote: "Innovative automation solutions", focus: ["Automation", "Data Processing", "Systems"] },
+  { id: "anitta-nciweni", name: "Anitta Nciweni", role: "Junior Paraplanner", quote: "Supporting strategic financial plans", focus: ["Paraplanning", "Documentation", "Research"] },
+  { id: "simo-mlanjeni", name: "Simo Mlanjeni", role: "Paraplanner", quote: "Expert paraplanning services", focus: ["Paraplanning", "Financial Analysis", "Client Solutions"] },
+  { id: "bongie-sithebe", name: "Bongie Sithebe", role: "Paraplanner", quote: "Committed to quality planning support", focus: ["Paraplanning", "Research", "Client Service"] },
+  { id: "algar-kasema", name: "Algar Kasema", role: "Trainee Financial Adviser", quote: "Detailed financial planning expertise", focus: ["Paraplanning", "Analysis", "Strategy Support"] },
+  { id: "ayanda-nyawose", name: "Ayanda Nyawose", role: "Trainee Financial Adviser", quote: "Comprehensive paraplanning support", focus: ["Paraplanning", "Financial Research", "Client Solutions"] },
+  { id: "waseem-seralker", name: "Waseem Seralker", role: "Wealth Management Assistant", quote: "Supporting wealth management excellence", focus: ["Client Support", "Wealth Management", "Service Delivery"] },
+  { id: "joshua-rossouw", name: "Joshua Rossouw", role: "AI Agent Developer", quote: "Less Terminator, more Automator", focus: ["AI Agent Developer"] },
+  { id: "marko-kruger", name: "Marko Kruger", role: "AI Agent Developer", quote: "An eye for and eye makes the whole world blind.", focus: ["AI automation architecture and financial services background", "Specialising in AI Agent Development", "workflow automations & integrations. Previously Professional Financial Advisor."] },
+  { id: "armand-terblanche", name: "Armand Terblanche", role: "AI Agent Developer", quote: "South Africans Love a Special", focus: ["Front End Dev", "Back End Dev", "Agentic workflows"] },
+  { id: "nanga-ceba-roto", name: "Nanga Ceba Roto", role: "Investment Operations and Trade Execution Manager", quote: "Precision in execution, intelligence in analysis.", focus: ["Trade execution and portfolio implementation", "Pre and post trade controls", "AI-driven trade reporting and analysis"] },
+  { id: "aime-ndumuhire", name: "Aime Ndumuhire", role: "AI Agent Developer", quote: "Building intelligent agents that empower our team.", focus: ["AI Agent Development", "Automation Engineering", "LLM Integration"] },
+  { id: "ben-rush", name: "Ben Rush", role: "AI Agent Developer", quote: "Building intelligent agents that empower our team.", focus: ["AI Agent Development", "Automation Engineering", "LLM Integration"] },
+  { id: "april-chapman", name: "April Chapman", role: "Paraplanner", quote: "Supporting advisers with detailed research and tailored client reports", focus: ["Paraplanning", "Financial Research", "Client Reports"] },
+  { id: "daniel-christ", name: "Daniel Christ", role: "Senior Advisor", quote: "Experienced guidance tailored to your long-term financial goals", focus: ["Financial Planning", "Investment Advice", "Retirement Planning"] },
+  { id: "lithakazi-mququ", name: "Lithakazi Mququ", role: "Junior Mortgage Support Associate" },
+  { id: "peter-wheadon", name: "Peter Wheadon", role: "Advisor Team Leader", quote: "Leading our advisers with experience and integrity", focus: ["Team Leadership", "Financial Planning", "Advisory Standards"] },
+  { id: "matthew-shelley", name: "Matthew Shelley", role: "Financial Adviser", quote: "Tailored financial guidance to help you achieve your goals", focus: ["Financial Planning", "Investment Advice", "Retirement Planning"] },
+  { id: "anele-nkonyana", name: "Anele Nkonyana", role: "Leads Associate" },
+  { id: "thando-janda", name: "Thando Janda", role: "Leads Associate" },
+  { id: "tracey-brigly", name: "Tracey Brigly", role: "Senior Administrator", quote: "Delivering exceptional client service and operational excellence", focus: ["Client Administration", "Operations", "Case Management"] },
+  { id: "belinda-waddicor", name: "Belinda Waddicor", role: "Recruitment & Competence Development Manager" },
+]

@@ -1,0 +1,167 @@
+---
+/* HERO G, "Estate band" (his ask, 2026-11-19: more film heroes): white above, their Services page's own "How Can We Help?" on the
+   left and the lede and actions on the right; below, filling the rest of the screen, a film of a historic mansion as the drone
+   draws back over its parkland (Pexels 34000415; scripts/make-hero-film.mjs hero-g), with their six services along its foot,
+   each a way in. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import poster from '../../assets/video/hero-g-poster.jpg'
+import { heroes } from '../../data/home'
+import { services } from '../../data/nav'
+import { site } from '../../data/site'
+const h = heroes.g
+---
+
+<section class="hg" aria-labelledby="hero-title">
+  <div class="wrap hg__top">
+    <div class="hg__head">
+      <p class="eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+    </div>
+    <div class="hg__side">
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas /></div>
+      <p class="hg__trust small enter" style="--d:0.4s">
+        <span><b>FCA authorised</b> · FRN {site.fca.frn}</span>
+        <span><b class="num">{site.reviews.rating}</b> · {site.reviews.count} reviews on {site.reviews.source}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="hg__band enter" style="--d:0.2s">
+    <Image src={poster} alt="" widths={[960, 1600]} sizes="100vw" loading="eager" class="fill-img" />
+    <video class="fill-img hg__film" data-film="/video/hero-g.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
+    <div class="hg__shade" aria-hidden="true"></div>
+    <nav class="wrap hg__services" aria-label="Our services">
+      <ul role="list">
+        {
+          services.map((s, i) => (
+            <li>
+              <a href={s.href}>
+                <span class="num hg__n">{String(i + 1).padStart(2, '0')}</span>
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/film'
+</script>
+
+<style>
+  .hg {
+    min-height: var(--hero-h);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-paper);
+  }
+  .hg__top {
+    display: grid;
+    gap: clamp(1.25rem, 3svh, 2rem) 4rem;
+    align-items: end;
+    padding-block: var(--hero-pad) clamp(1.5rem, 5svh, 3.25rem);
+  }
+  @media (min-width: 64em) {
+    .hg__top {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+  }
+  .hg__head {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.6rem);
+  }
+  .hg__side {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+    max-width: 30rem;
+  }
+  .hg__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+  .hg__trust b {
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .hg__band {
+    position: relative;
+    flex: 1;
+    min-height: clamp(13rem, 30svh, 30rem);
+    overflow: hidden;
+    background: #2d3b2d;
+  }
+  .hg__film {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hg__film:global(.is-on) {
+    opacity: 1;
+  }
+  .hg__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(1 24 59 / 0) 40%, rgb(1 24 59 / 0.78) 100%);
+  }
+  .hg__services {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .hg__services ul {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-top: 1px solid rgb(255 255 255 / 0.32);
+  }
+  .hg__services li + li {
+    border-left: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .hg__services a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem 0.9rem 1.15rem 0;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .hg__services li + li a {
+    padding-left: 0.9rem;
+  }
+  .hg__services a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .hg__n {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-gold);
+  }
+  /* a phone: the six names as one swipeable row, so the film keeps its room */
+  @media (max-width: 63.99em) {
+    .hg__services ul {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hg__services ul::-webkit-scrollbar {
+      display: none;
+    }
+    .hg__services li {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+    }
+    .hg__services a {
+      white-space: nowrap;
+    }
+  }
+</style>

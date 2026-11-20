@@ -1,0 +1,15 @@
+---
+import LegalPage from '../components/legal/LegalPage.astro'
+import { legal } from '../data/pages/legal'
+const d = legal['regulatory-information']
+---
+
+<LegalPage
+  title="Regulatory Information | Ascot Wealth Management"
+  description="Ascot Wealth Management Ltd is authorised and regulated by the Financial Conduct Authority (FCA). Firm Reference Number (FRN): 551744"
+  path="/regulatory-information"
+  heading={d.title}
+  updated={d.updated}
+  intro={d.intro}
+  blocks={d.blocks}
+/>

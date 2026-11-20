@@ -1,0 +1,299 @@
+---
+/* The six service pages (/services/<slug>), one template, their words from src/data/pages/services.ts.
+   The order is the live page's: the service and its scene, Overview beside Key Features, What We Offer, Our Process (a real
+   sequence, so numbered and read top to bottom), Why Choose AWM?, the questions, the other services, and their "Ready to Get
+   Started?" as the close. A risk warning, where the service has one, sits under the opening words it qualifies. */
+import Layout from '../../layouts/Layout.astro'
+import PageHero from '../../components/PageHero.astro'
+import Closing from '../../components/Closing.astro'
+import Faq from '../../components/Faq.astro'
+import OtherServices from '../../components/services/OtherServices.astro'
+import { services, serviceLabels as L, type Service } from '../../data/pages/services'
+import { site } from '../../data/site'
+import room from '../../assets/img/consultation-room.webp'
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }))
+}
+
+const { s } = Astro.props as { s: Service }
+/* the close uses the Closing's own office picture, except on Corporate Services, which already opens with it */
+const own = s.slug === 'corporate-services'
+const close = own ? { image: room, alt: 'A consulting room with an oak table, a fireplace and a garden beyond the windows' } : {}
+---
+
+<Layout title={s.meta.title} description={s.meta.description} path={`/services/${s.slug}`}>
+  <PageHero
+    crumbs={[{ label: 'Services', href: '/services' }, { label: s.title }]}
+    eyebrow="Services"
+    title={s.title}
+    lede={s.summary}
+    image={s.img}
+    alt={s.alt}
+    actions={[
+      { label: L.book, href: '/contact' },
+      { label: L.call, href: site.phoneHref, kind: 'line' },
+    ]}
+  >
+    {s.warning && <p class="risk sd-risk">{s.warning}</p>}
+  </PageHero>
+
+  <section class="section" aria-labelledby="sd-overview">
+    <div class="wrap sd-ov">
+      <div class="sd-ov__main">
+        <h2 id="sd-overview" class="h2">{L.overview}</h2>
+        <p class="lede">{s.overview}</p>
+      </div>
+      <div class="sd-ov__side">
+        <h3 class="sd-label">{L.features}</h3>
+        <ul class="sd-features" role="list">
+          {s.features.map((f) => <li>{f}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-tint" aria-labelledby="sd-offer">
+    <div class="wrap">
+      <h2 id="sd-offer" class="h2">{L.offer}</h2>
+      <ul class="sd-offer" role="list">
+        {s.offer.map((o) => <li>{o}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="sd-process">
+    <div class="wrap sd-pr">
+      <div class="head sd-pr__head">
+        <h2 id="sd-process" class="h2">{L.process}</h2>
+        <p class="lede">{L.processIntro}</p>
+      </div>
+      <ol class="sd-steps" role="list">
+        {
+          s.process.map((p, i) => (
+            <li>
+              <span class="sd-steps__n num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div class="sd-steps__body">
+                <h3 class="h3">{p.title}</h3>
+                <p>{p.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-tint" aria-labelledby="sd-why">
+    <div class="wrap sd-why">
+      <h2 id="sd-why" class="h2">{L.why}</h2>
+      <ul class="sd-why__list" role="list">
+        {s.why.map((w) => <li>{w}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="sd-faq">
+    <div class="wrap sd-faq">
+      <div class="head sd-faq__head">
+        <h2 id="sd-faq" class="h2">{L.faq}</h2>
+        <p>{s.faqIntro}</p>
+      </div>
+      <Faq items={s.faqs} id="sd-faq-list" />
+    </div>
+  </section>
+
+  <OtherServices current={s.slug} />
+
+  <Closing
+    eyebrow={s.title}
+    title={L.ready}
+    text={s.closing}
+    actions={[{ label: L.readyCta, href: '/contact' }]}
+    {...close}
+  />
+</Layout>
+
+<style>
+  .sd-risk {
+    max-width: 40rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Overview beside Key Features */
+  .sd-ov {
+    display: grid;
+    gap: 2.5rem 5rem;
+  }
+  .sd-ov__main {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    max-width: 42rem;
+  }
+  .sd-label {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .sd-features {
+    margin-top: 1rem;
+    border-top: 2px solid var(--color-navy);
+  }
+  .sd-features li {
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--color-line);
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  @media (min-width: 64em) {
+    .sd-ov {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    }
+    .sd-ov__side {
+      padding-top: 0.6rem;
+    }
+  }
+
+  /* What We Offer: six ruled cells, each with a short gold tick */
+  .sd-offer {
+    display: grid;
+    gap: 0 2rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .sd-offer li {
+    position: relative;
+    padding: 1.35rem 0 1.6rem;
+    border-top: 1px solid var(--color-line-strong);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+  .sd-offer li::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  @media (min-width: 40em) {
+    .sd-offer {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .sd-offer {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 2.5rem;
+    }
+  }
+
+  /* Our Process: the head stays in view while the five steps are read top to bottom along one rule */
+  .sd-pr {
+    display: grid;
+    gap: 2.5rem 5rem;
+  }
+  .sd-steps {
+    position: relative;
+    display: grid;
+  }
+  .sd-steps li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .sd-steps li:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .sd-steps__n {
+    font-size: clamp(1.75rem, 1.4rem + 1vw, 2.4rem);
+    font-weight: 250;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-navy);
+  }
+  .sd-steps li:first-child .sd-steps__n {
+    color: var(--color-gold-ink);
+  }
+  .sd-steps__body {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 0.15rem;
+  }
+  .sd-steps__body p {
+    max-width: 34rem;
+  }
+  @media (min-width: 40em) {
+    .sd-steps li {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .sd-pr {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+    .sd-pr__head {
+      position: sticky;
+      top: calc(var(--bar-h) + 2rem);
+    }
+  }
+
+  /* Why Choose AWM?: five reasons, set large on hairlines */
+  .sd-why {
+    display: grid;
+    gap: 2rem 5rem;
+  }
+  .sd-why__list {
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .sd-why__list li {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--color-line-strong);
+    font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+    font-weight: 350;
+    line-height: 1.35;
+    letter-spacing: -0.012em;
+    color: var(--color-navy);
+  }
+  .sd-why__list li::before {
+    content: '';
+    width: 1rem;
+    height: 2px;
+    background: var(--color-gold);
+    transform: translateY(-0.3em);
+  }
+  @media (min-width: 64em) {
+    .sd-why {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    }
+  }
+
+  /* the questions */
+  .sd-faq {
+    display: grid;
+    gap: 2rem 5rem;
+  }
+  .sd-faq__head p {
+    color: var(--color-ink-3);
+  }
+  @media (min-width: 64em) {
+    .sd-faq {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+</style>

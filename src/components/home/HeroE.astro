@@ -1,0 +1,125 @@
+---
+/* HERO E, "Autumn estate" (his ask, 2026-11-19: more film heroes): the white page with a film half. Their "A good plan grows with
+   you." on white on the left, the lede, the actions and a ruled ledger of facts; on the right, to the window's edge, an English
+   country estate in autumn, the drone gliding up its avenue (Pexels 40730607; scripts/make-hero-film.mjs hero-e). */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import poster from '../../assets/video/hero-e-poster.jpg'
+import { heroes } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.e
+---
+
+<section class="he" aria-labelledby="hero-title">
+  <div class="he__media enter" style="--d:0.15s">
+    <Image src={poster} alt="" widths={[800, 1200, 1600]} sizes="(min-width: 64em) 48vw, 100vw" loading="eager" fetchpriority="high" class="fill-img" />
+    <video class="fill-img he__film" data-film="/video/hero-e.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
+  </div>
+
+  <div class="wrap he__in">
+    <div class="he__copy">
+      <p class="eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas /></div>
+      <dl class="he__ledger enter" style="--d:0.4s">
+        <div>
+          <dt>FCA authorised</dt>
+          <dd class="num">FRN {site.fca.frn}</dd>
+        </div>
+        <div>
+          <dt>Client reviews</dt>
+          <dd class="num">{site.reviews.rating} · {site.reviews.count} on {site.reviews.source}</dd>
+        </div>
+        <div>
+          <dt>Telephone</dt>
+          <dd class="num"><a href={site.phoneHref}>{site.phoneDisplay}</a></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/film'
+</script>
+
+<style>
+  .he {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    background: var(--color-paper);
+  }
+  .he__in {
+    display: flex;
+    align-items: center;
+    padding-block: var(--hero-pad);
+  }
+  .he__copy {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+  }
+  .he__copy h1 {
+    max-width: 11ch;
+  }
+  .he__copy .lede {
+    max-width: 30rem;
+  }
+  .he__ledger {
+    display: grid;
+    margin-top: clamp(0.5rem, 2svh, 1.25rem);
+    border-top: 1px solid var(--color-line);
+    max-width: 30rem;
+  }
+  .he__ledger div {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: clamp(0.55rem, 1.5svh, 0.8rem);
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.9375rem;
+  }
+  .he__ledger dt {
+    color: var(--color-ink-3);
+  }
+  .he__ledger dd {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+  .he__ledger a {
+    text-decoration: none;
+  }
+  .he__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  .he__film {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .he__film:global(.is-on) {
+    opacity: 1;
+  }
+  @media (max-width: 63.99em) {
+    .he {
+      flex-direction: column-reverse;
+    }
+  }
+  @media (min-width: 64em) {
+    .he__media {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 48%;
+      aspect-ratio: auto;
+    }
+    .he__copy {
+      max-width: 48%;
+      padding-right: 3rem;
+    }
+  }
+</style>

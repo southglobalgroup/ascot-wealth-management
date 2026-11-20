@@ -1,0 +1,287 @@
+---
+/* /investment-approach: their philosophy (four principles), then what the live page keeps behind two tabs laid out in full, so
+   nothing is hidden: "Our Approach" (the three-step investment process, a real sequence, and the three portfolio models with their
+   figures exactly as given, each split drawn as a bar, the risk warning directly under them) and "Risk Management" (the framework's
+   two lists). Their close last. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { approachPage as p } from '../data/pages/investment-approach'
+import balance from '../assets/img/balance-sculpture.webp'
+---
+
+<Layout title={p.meta.title} description={p.meta.description} path="/investment-approach">
+  <PageHero
+    crumbs={[{ label: p.title }]}
+    eyebrow="Who We Are"
+    title={p.title}
+    lede={p.lede}
+    image={balance}
+    alt="A tactile limestone and brass balance sculpture in warm light"
+  />
+
+  <section class="section" aria-labelledby="ia-philosophy">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="ia-philosophy" class="h2">{p.philosophy.title}</h2>
+        <p class="lede">{p.philosophy.lede}</p>
+      </div>
+      <ul class="ia-ph" role="list">
+        {
+          p.philosophy.items.map((x) => (
+            <li>
+              <h3 class="h3">{x.title}</h3>
+              <p>{x.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-tint" aria-labelledby="ia-process">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">{p.approach.label}</p>
+        <h2 id="ia-process" class="h2">{p.approach.title}</h2>
+      </div>
+      <ol class="ia-steps" role="list">
+        {
+          p.approach.steps.map((s, i) => (
+            <li>
+              <span class="ia-steps__n num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="h3">{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ia-models">
+    <div class="wrap">
+      <h2 id="ia-models" class="h2">{p.models.title}</h2>
+      <ul class="ia-models" role="list">
+        {
+          p.models.items.map((m) => (
+            <li class="ia-model">
+              <div class="ia-model__top">
+                <h3 class="h3">{m.name}</h3>
+                <p class="ia-model__risk">
+                  Risk: <strong>{m.risk}</strong>
+                </p>
+              </div>
+              <div class="ia-model__bar" aria-hidden="true">
+                <span class="ia-model__bonds" style={`flex-basis:${m.bonds}%`}>
+                  {m.bonds}%
+                </span>
+                <span class="ia-model__eq" style={`flex-basis:${m.equities}%`}>
+                  {m.equities}%
+                </span>
+              </div>
+              <p class="ia-model__alloc num">{m.allocation}</p>
+              <p class="ia-model__exp">
+                Expected: <span class="num">{m.expected}</span>/year
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="risk ia-risk">{p.models.warning}</p>
+    </div>
+  </section>
+
+  <section class="section bg-tint" aria-labelledby="ia-risk">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">{p.risk.label}</p>
+        <h2 id="ia-risk" class="h2">{p.risk.title}</h2>
+      </div>
+      <div class="ia-fw">
+        {
+          p.risk.groups.map((g) => (
+            <div>
+              <h3 class="h3">{g.title}</h3>
+              <ul role="list">
+                {g.items.map((it) => (
+                  <li>{it}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Closing title={p.closing.title} text={p.closing.text} actions={[{ label: p.closing.cta, href: '/contact' }]} />
+</Layout>
+
+<style>
+  /* the four principles: ruled cells with a gold tick */
+  .ia-ph {
+    display: grid;
+    gap: 0 2.5rem;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  .ia-ph li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: 1.5rem 0 1.75rem;
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .ia-ph li::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  @media (min-width: 40em) {
+    .ia-ph {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .ia-ph {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* the investment process: three numbered steps along one rule */
+  .ia-steps {
+    display: grid;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    counter-reset: none;
+  }
+  .ia-steps li {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: 1.5rem 0 1.75rem;
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .ia-steps__n {
+    font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+    font-weight: 250;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-navy);
+    margin-bottom: 0.4rem;
+  }
+  @media (min-width: 48em) {
+    .ia-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 2.5rem;
+    }
+  }
+
+  /* the three models */
+  .ia-models {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .ia-model {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 1.75rem;
+    border: 1px solid var(--color-line);
+    border-top: 2px solid var(--color-navy);
+    border-radius: var(--radius);
+  }
+  .ia-model__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+  .ia-model__risk {
+    font-size: 0.8125rem;
+    color: var(--color-ink-3);
+  }
+  .ia-model__risk strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .ia-model__bar {
+    display: flex;
+    height: 2rem;
+    gap: 2px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 2rem;
+  }
+  .ia-model__bar span {
+    flex-grow: 0;
+    flex-shrink: 1;
+    min-width: 0;
+    padding-inline: 0.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ia-model__bonds {
+    background: var(--color-navy);
+    color: #fff;
+  }
+  .ia-model__eq {
+    background: var(--color-gold);
+    color: var(--color-navy);
+    text-align: right;
+  }
+  .ia-model__alloc {
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .ia-model__exp {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+    color: var(--color-ink-3);
+  }
+  .ia-model__exp .num {
+    font-size: 1.5rem;
+    font-weight: 330;
+    letter-spacing: -0.02em;
+    color: var(--color-navy);
+  }
+  .ia-risk {
+    margin-top: 1.5rem;
+    max-width: 46rem;
+  }
+  @media (min-width: 56em) {
+    .ia-models {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* the risk framework: two ruled lists */
+  .ia-fw {
+    display: grid;
+    gap: 2.5rem 4rem;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  .ia-fw ul {
+    margin-top: 1rem;
+    border-top: 2px solid var(--color-navy);
+  }
+  .ia-fw li {
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--color-line-strong);
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  @media (min-width: 48em) {
+    .ia-fw {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

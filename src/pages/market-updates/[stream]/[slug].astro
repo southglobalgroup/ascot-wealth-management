@@ -1,0 +1,12 @@
+---
+/* A Market Intelligence update, at the live site's own address (/market-updates/<stream>/<slug>). Data: src/data/articles/market-updates.json. */
+import Article from '../../../components/articles/Article.astro'
+import updates from '../../../data/articles/market-updates.json'
+
+export function getStaticPaths() {
+  return updates.map((u) => ({ params: { stream: u.stream, slug: u.slug } }))
+}
+const { slug } = Astro.params
+---
+
+<Article kind="update" slug={slug} />

@@ -1,0 +1,195 @@
+---
+/* /contact, "Contact Ascot Wealth Management": how to reach them on the left (the office with directions on Google Maps, the
+   telephone, the email, the hours), their message form on the right, and their four facts beneath. The live page has no closing
+   words of its own, so it ends on those facts rather than a borrowed close. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import ContactForm from '../components/contact/ContactForm.astro'
+import { contactPage as c } from '../data/pages/contact'
+import { site } from '../data/site'
+
+const ch = c.chat
+const [l1, l2, l3, l4, l5] = site.address.lines
+const address = [l1, `${l2}, ${l3}`, `${l4}, ${l5}`, ch.country]
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address.oneLine)}`
+---
+
+<Layout title={c.title} description={c.description} path="/contact">
+  <PageHero crumbs={[{ label: 'Contact' }]} eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} />
+
+  <section class="section ct" aria-label={c.hero.eyebrow}>
+    <div class="wrap ct__in">
+      <div class="ct__reach">
+        <h2 class="ct__title">{ch.title}</h2>
+        <p>{ch.text}</p>
+        <dl class="ct__list">
+          <div>
+            <dt>{ch.labels.visit}</dt>
+            <dd>
+              <address>{address.map((l) => <span class="ct__line">{l}</span>)}</address>
+              <a class="link-arrow ct__dir" href={directions} target="_blank" rel="noopener">
+                {ch.directions}
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>{ch.labels.call}</dt>
+            <dd><a class="ct__phone num" href={site.phoneHref}>{site.phoneDisplay}</a></dd>
+          </div>
+          <div>
+            <dt>{ch.labels.email}</dt>
+            <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+          </div>
+        </dl>
+        <div>
+          <a class="btn btn-navy" href="#message">{ch.cta}</a>
+        </div>
+        <p class="ct__hours">
+          <strong>{ch.hoursLabel}</strong>
+          {ch.hours.map((h) => <span class="ct__line">{h}</span>)}
+        </p>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+
+  <section class="ft" aria-label="Ascot Wealth Management">
+    <ul class="wrap ft__in" role="list">
+      {
+        c.facts.map((x) => (
+          <li>
+            <p class="ft__k">{x.title}</p>
+            <p class="small">{x.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .ct__in {
+    display: grid;
+    gap: 3.5rem 5rem;
+    align-items: start;
+  }
+  @media (min-width: 64em) {
+    .ct__in {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+  }
+  .ct__reach {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .ct__title {
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .ct__list {
+    display: grid;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .ct__list > div {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .ct__list dt {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .ct__list dd {
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+  .ct__list address {
+    font-style: normal;
+  }
+  .ct__list dd > a:not(.link-arrow) {
+    text-decoration: none;
+  }
+  .ct__list dd > a:not(.link-arrow):hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .ct__line {
+    display: block;
+  }
+  .ct__dir {
+    margin-top: 0.6rem;
+  }
+  .ct__phone {
+    font-size: 1.5rem;
+    font-weight: 330;
+    letter-spacing: -0.01em;
+    color: var(--color-navy);
+  }
+  .ct__hours {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 0.9375rem;
+  }
+  .ct__hours strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  /* the four facts */
+  .ft {
+    border-top: 1px solid var(--color-line);
+    background: var(--color-mist);
+  }
+  .ft__in {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 64em) {
+    .ft__in {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .ft__in li {
+    display: grid;
+    gap: 0.2rem;
+    align-content: start;
+    padding: 1.75rem 1rem 1.75rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .ft__in li:nth-child(-n + 2) {
+    border-top: 0;
+  }
+  .ft__in li:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--color-line);
+  }
+  @media (min-width: 64em) {
+    .ft__in li {
+      padding: 2.25rem 1.5rem 2.25rem 0;
+      border-top: 0;
+    }
+    .ft__in li + li {
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+  .ft__k {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+</style>

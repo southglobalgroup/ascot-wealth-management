@@ -1,0 +1,15 @@
+---
+import LegalPage from '../components/legal/LegalPage.astro'
+import { legal } from '../data/pages/legal'
+const d = legal['cookie-policy']
+---
+
+<LegalPage
+  title="Cookie Policy | Ascot Wealth Management"
+  description="This Cookie Policy explains how Ascot Wealth Management Ltd uses cookies and similar technologies when you visit our website."
+  path="/cookie-policy"
+  heading={d.title}
+  updated={d.updated}
+  intro={d.intro}
+  blocks={d.blocks}
+/>

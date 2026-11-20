@@ -1,0 +1,98 @@
+---
+/* HOW WE WORK: the page's one deep-navy band. Their four steps from first call to ongoing relationship along one gold-ticked rule
+   (a real sequence, so numbered), then the first step offered: the free introductory call and the number. */
+import { howWeWork as h, contact } from '../../data/home'
+import { site } from '../../data/site'
+---
+
+<section class="section hw" aria-labelledby="hw-title">
+  <div class="wrap">
+    <div class="hw__head">
+      <h2 id="hw-title" class="h2">{h.title}</h2>
+      <div class="hw__act">
+        <a class="btn btn-gold" href="/contact">{contact.cta}</a>
+        <a class="hw__phone num" href={site.phoneHref}>{site.phoneDisplay}</a>
+      </div>
+    </div>
+    <ol class="hw__steps" role="list">
+      {
+        h.steps.map((s, i) => (
+          <li>
+            <span class="hw__tick" aria-hidden="true" />
+            <span class="hw__n num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h3">{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .hw {
+    background: var(--color-navy-deep);
+    color: rgb(255 255 255 / 0.76);
+  }
+  .hw h2,
+  .hw h3 {
+    color: #fff;
+  }
+  .hw__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+  }
+  .hw__act {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+  .hw__phone {
+    font-size: 1.375rem;
+    font-weight: 330;
+    color: #fff;
+    text-decoration: none;
+  }
+  .hw__steps {
+    display: grid;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid rgb(255 255 255 / 0.2);
+  }
+  @media (min-width: 40em) {
+    .hw__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .hw__steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .hw__steps li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.9rem 2rem 0.5rem 0;
+  }
+  .hw__tick {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  .hw__n {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gold);
+  }
+  .hw__steps p {
+    font-size: 0.9375rem;
+  }
+</style>

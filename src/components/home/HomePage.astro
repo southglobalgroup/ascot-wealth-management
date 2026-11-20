@@ -1,0 +1,50 @@
+---
+/* The home page with one of the hero options. On the site (his picks, 2026-11-19): C, the sunset film, is the home page (/); D (dusk
+   film), E (autumn estate, white split), F (London twilight), G (estate band), and the still-photograph options H (gallery print),
+   I (manor and card) and J (triptych) are at /hero/d ... /hero/g (noindex, out of the
+   sitemap) for choosing. A (Horizon) and B (Coast) are off the site but kept ("remove hero A and B, I'll go for C and D for now"):
+   HeroA.astro / HeroB.astro; to bring one back, add it to getStaticPaths in src/pages/hero/[v].astro and to the switcher.
+   Sections a hero already covers are left out or retitled under it: A/E carry the long view; B/F open with the approach line (the
+   approach section then leads with "We listen first."; J too); I opens with the contact line (the close takes their Services page's "Ready to Get Started?"); B/E carry the trust facts; C opens with the services line (the services
+   section takes their menu's heading); D opens with the team line (the team section takes their Our Team page's heading). */
+import Layout from '../../layouts/Layout.astro'
+import HeroA from './HeroA.astro'
+import HeroB from './HeroB.astro'
+import HeroC from './HeroC.astro'
+import HeroD from './HeroD.astro'
+import HeroE from './HeroE.astro'
+import HeroF from './HeroF.astro'
+import HeroG from './HeroG.astro'
+import HeroH from './HeroH.astro'
+import HeroI from './HeroI.astro'
+import HeroJ from './HeroJ.astro'
+import TrustStrip from './TrustStrip.astro'
+import Services from './Services.astro'
+import LongView from './LongView.astro'
+import Approach from './Approach.astro'
+import HowWeWork from './HowWeWork.astro'
+import Team from './Team.astro'
+import Intelligence from './Intelligence.astro'
+import Contact from './Contact.astro'
+import HeroSwitch from './HeroSwitch.astro'
+import { site } from '../../data/site'
+
+export type HeroKey = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j'
+type Props = { hero: HeroKey; home?: boolean }
+const { hero, home = false } = Astro.props
+const Hero = { a: HeroA, b: HeroB, c: HeroC, d: HeroD, e: HeroE, f: HeroF, g: HeroG, h: HeroH, i: HeroI, j: HeroJ }[hero]
+const has = (...keys: HeroKey[]) => keys.includes(hero)
+---
+
+<Layout path={home ? '/' : `/hero/${hero}`} noindex={!home}>
+  <Hero />
+  {!has('b', 'e') && <TrustStrip />}
+  <Services heroHasTitle={has('c')} />
+  {!has('a', 'e') && <LongView />}
+  <Approach heroHasTitle={has('b', 'f', 'j')} />
+  <HowWeWork />
+  <Team heroHasTitle={has('d')} />
+  <Intelligence />
+  <Contact heroHasTitle={has('i')} />
+  {site.heroSwitcher && <HeroSwitch slot="after" current={hero} />}
+</Layout>

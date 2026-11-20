@@ -1,0 +1,100 @@
+---
+/* OUR APPROACH: "Clear advice. A lasting relationship." (under hero B, which opens with that line, the heading is their "We listen
+   first." instead), their consultation-room panorama across the column, and We listen / We explain / You decide beneath it. */
+import { Image } from 'astro:assets'
+import room from '../../assets/img/consultation-room.webp'
+import { approach as a } from '../../data/home'
+type Props = { heroHasTitle?: boolean }
+const { heroHasTitle = false } = Astro.props
+const first = a.pillars[0]
+---
+
+<section class="section ap" aria-labelledby="ap-title">
+  <div class="wrap">
+    <div class="head-split">
+      <div class="head">
+        <p class="eyebrow">{a.eyebrow}</p>
+        <h2 id="ap-title" class="h2">
+          {heroHasTitle ? 'We listen first.' : a.title.split(/(?<=\.) /).map((part, i) => (i ? <><br />{part}</> : part))}
+        </h2>
+      </div>
+      <p class="lede">
+        {heroHasTitle ? `${first.text} ${first.note}` : a.lede.join(' ')}
+      </p>
+    </div>
+
+    <div class="ap__media">
+      <Image src={room} alt="A quiet conversation in a room overlooking a garden" widths={[960, 1600, 2172]} sizes="(min-width: 80em) 1200px, 100vw" class="fill-img" />
+    </div>
+
+    <ol class="ap__pillars" role="list">
+      {
+        a.pillars.map((p) => (
+          <li>
+            <span class="num ap__n">{p.n}</span>
+            <span class="ap__word">{p.title}</span>
+            {p.text && !heroHasTitle && <p class="ap__text">{p.text} {p.note}</p>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .ap__media {
+    position: relative;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    aspect-ratio: 3 / 1;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  @media (max-width: 48em) {
+    .ap__media {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  .ap__pillars {
+    display: grid;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 48em) {
+    .ap__pillars {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .ap__pillars li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.4rem 1rem;
+    padding: 1.6rem 1.5rem 1.6rem 0;
+  }
+  @media (min-width: 48em) {
+    .ap__pillars li + li {
+      padding-left: 1.75rem;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+  @media (max-width: 47.99em) {
+    .ap__pillars li + li {
+      border-top: 1px solid var(--color-line);
+    }
+  }
+  .ap__n {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .ap__word {
+    font-size: clamp(1.4rem, 1.1rem + 0.8vw, 1.75rem);
+    font-weight: 330;
+    letter-spacing: -0.02em;
+    color: var(--color-navy);
+  }
+  .ap__text {
+    grid-column: 2;
+    font-size: 0.9375rem;
+    color: var(--color-ink-3);
+  }
+</style>

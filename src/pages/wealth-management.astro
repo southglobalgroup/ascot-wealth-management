@@ -1,0 +1,97 @@
+---
+/* /wealth-management: their one paragraph and its warning, then their six wealth-management services as a ruled table of six
+   (numbered only to mark each cell), and their close. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { wealthPage as p } from '../data/pages/wealth-management'
+import sapling from '../assets/img/sapling-at-dawn.jpg'
+---
+
+<Layout title={p.meta.title} description={p.meta.description} path="/wealth-management">
+  <PageHero
+    crumbs={[{ label: p.title }]}
+    title={p.title}
+    lede={p.lede}
+    image={sapling}
+    alt="A young oak sapling alone in a wide field under a dawn sky"
+    actions={[{ label: p.cta, href: '/contact' }]}
+  >
+    <p class="risk wm-risk">{p.warning}</p>
+  </PageHero>
+
+  <section class="section" aria-labelledby="wm-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="wm-title" class="h2">{p.servicesTitle}</h2>
+        <p class="lede">{p.servicesLede}</p>
+      </div>
+      <ul class="wm-grid" role="list">
+        {
+          p.services.map((s, i) => (
+            <li>
+              <span class="wm-grid__n num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="h3">{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Closing title={p.closing.title} text={p.closing.text} actions={[{ label: p.closing.cta, href: '/contact' }]} />
+</Layout>
+
+<style>
+  .wm-risk {
+    max-width: 40rem;
+    margin-top: 0.25rem;
+  }
+  .wm-grid {
+    display: grid;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 2px solid var(--color-navy);
+  }
+  .wm-grid li {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: 1.75rem 0 2rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .wm-grid__n {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .wm-grid p {
+    max-width: 24rem;
+  }
+  @media (min-width: 40em) {
+    .wm-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .wm-grid li {
+      padding-inline: 0 2rem;
+    }
+    .wm-grid li:nth-child(2n) {
+      padding-left: 2rem;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+  @media (min-width: 64em) {
+    .wm-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .wm-grid li,
+    .wm-grid li:nth-child(2n) {
+      padding: 2.25rem 2.5rem 2.5rem;
+      border-left: 1px solid var(--color-line);
+    }
+    .wm-grid li:nth-child(3n + 1) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

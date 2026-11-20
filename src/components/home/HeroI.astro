@@ -1,0 +1,110 @@
+---
+/* HERO I, "Manor and card" (still photography; his ask, 2026-11-19): a historic Wiltshire manor in golden stone under a wide sky
+   fills the screen, drawing in by a hair over half a minute (still under reduced motion); their "Start with a conversation." sits
+   on a crisp white card at the foot, a gold rule across its top, the telephone number set beneath the actions.
+   Photograph: Phil Ledwith, Pexels 41018777 (the Pexels licence). */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import manor from '../../assets/img/stock/wiltshire-manor.jpg'
+import { heroes } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.i
+---
+
+<section class="hi" aria-labelledby="hero-title">
+  <div class="hi__photo">
+    <Image src={manor} alt="A historic English manor house in golden stone beneath a wide summer sky, Wiltshire" widths={[960, 1600, 2600]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img hi__img" />
+  </div>
+  <div class="hi__shade" aria-hidden="true"></div>
+
+  <div class="wrap hi__in">
+    <div class="hi__card enter" style="--d:0.1s">
+      <p class="eyebrow">{h.eyebrow}</p>
+      <h1 id="hero-title" class="hi__title">{h.title}</h1>
+      <p class="lede">{h.lede}</p>
+      <HeroCtas />
+      <p class="hi__call">
+        <span class="hi__call-k">Telephone</span>
+        <a class="num" href={site.phoneHref}>{site.phoneDisplay}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hi {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    overflow: hidden;
+    background: #8a7a5c;
+  }
+  .hi__photo {
+    position: absolute;
+    inset: 0;
+  }
+  .hi__img {
+    object-position: 50% 40%;
+    transform-origin: 55% 45%;
+    animation: hi-drift 32s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  }
+  @keyframes hi-drift {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.07);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hi__img {
+      animation: none;
+    }
+  }
+  .hi__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(1 24 59 / 0.32) 0%, rgb(1 24 59 / 0) 45%);
+  }
+  .hi__in {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding-block: var(--hero-pad) clamp(1.5rem, 6svh, 4rem);
+  }
+  .hi__card {
+    display: grid;
+    gap: clamp(0.85rem, 2.2svh, 1.25rem);
+    max-width: 35rem;
+    padding: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
+    background: var(--color-paper);
+    border-top: 3px solid var(--color-gold);
+    box-shadow: 0 40px 80px -50px rgb(1 24 59 / 0.6);
+  }
+  .hi__title {
+    font-size: min(clamp(2.3rem, 1.4rem + 2.8vw, 3.9rem), 7.4svh);
+    font-weight: 300;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+  .hi__call {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-top: clamp(0.75rem, 2svh, 1.1rem);
+    border-top: 1px solid var(--color-line);
+  }
+  .hi__call-k {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .hi__call a {
+    font-size: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem);
+    font-weight: 300;
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+</style>

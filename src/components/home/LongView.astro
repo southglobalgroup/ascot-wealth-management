@@ -1,0 +1,67 @@
+---
+/* THE LONG VIEW (left out under hero A, which carries it): their four steps, numbered as they number them, in one ruled row on
+   pale grey, each with its line. */
+import { longView as l } from '../../data/home'
+---
+
+<section class="section bg-tint lv" aria-labelledby="lv-title">
+  <div class="wrap">
+    <div class="head-split">
+      <div class="head">
+        <p class="eyebrow">{l.eyebrow}</p>
+        <h2 id="lv-title" class="h2">{l.title}</h2>
+      </div>
+      <p class="lede">{l.lede}</p>
+    </div>
+    <ol class="lv__steps" role="list">
+      {
+        l.steps.map((s, i) => (
+          <li>
+            <span class="lv__n num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h3">{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .lv__steps {
+    display: grid;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--color-line-strong);
+  }
+  @media (min-width: 40em) {
+    .lv__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .lv__steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .lv__steps li {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.75rem 1.75rem 0.5rem 0;
+  }
+  @media (min-width: 64em) {
+    .lv__steps li + li {
+      padding-left: 1.75rem;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+  .lv__n {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .lv__steps p {
+    color: var(--color-ink-3);
+    font-size: 0.9375rem;
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+/* /faq, "How Can We Help You?": their ten questions in their order, as one ruled list that opens one answer at a time, beside a
+   short way to reach them; then their closing words. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import Faq from '../components/Faq.astro'
+import { faqPage as f } from '../data/pages/faq'
+import { site } from '../data/site'
+---
+
+<Layout title={f.title} description={f.description} path="/faq">
+  <PageHero crumbs={[{ label: 'FAQ' }]} eyebrow={f.hero.eyebrow} title={f.hero.title} lede={f.hero.lede} />
+
+  <section class="section fq" aria-label={f.hero.eyebrow}>
+    <div class="wrap fq__in">
+      <div class="fq__list">
+        <Faq items={f.items} id="faq" />
+      </div>
+      <aside class="fq__side" aria-labelledby="fq-side-title">
+        <p id="fq-side-title" class="fq__k">Contact</p>
+        <a class="fq__phone num" href={site.phoneHref}>{site.phoneDisplay}</a>
+        <a class="fq__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      </aside>
+    </div>
+  </section>
+
+  <Closing title={f.closing.title} text={f.closing.text} actions={f.closing.actions} id="faq-closing-title" />
+</Layout>
+
+<style>
+  .fq__in {
+    display: grid;
+    gap: 3rem 5rem;
+    align-items: start;
+  }
+  @media (min-width: 64em) {
+    .fq__in {
+      grid-template-columns: minmax(0, 1fr) 17rem;
+    }
+    .fq__side {
+      position: sticky;
+      top: calc(var(--bar-h) + 2rem);
+    }
+  }
+  .fq__list {
+    min-width: 0;
+  }
+  .fq__side {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--color-gold);
+  }
+  .fq__k {
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .fq__phone {
+    font-size: 1.5rem;
+    font-weight: 330;
+    letter-spacing: -0.01em;
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+  .fq__mail {
+    color: var(--color-ink-2);
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
+  }
+</style>

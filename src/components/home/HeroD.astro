@@ -1,0 +1,177 @@
+---
+/* HERO D, "Dusk film" (his ask, 2026-11-19: "another variant with video, as C looks very nice"): the City and the Thames at blue
+   dusk, its lights coming on, playing forwards and back without a seam (Pexels 3568719, scripts/make-hero-film.mjs hero-d).
+   Their line ("Advice from people who know you.") centred in the sky, and along the foot, on a glass bar over the river, the four
+   advisers from their home page: the people the line is about. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import poster from '../../assets/video/hero-d-poster.jpg'
+import { heroes, team } from '../../data/home'
+const h = heroes.d
+---
+
+<section class="hdf" aria-labelledby="hero-title">
+  <Image src={poster} alt="" widths={[960, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img hdf__media" />
+  <video class="fill-img hdf__media hdf__film" data-film="/video/hero-d.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
+  <div class="hdf__scrim" aria-hidden="true"></div>
+
+  <div class="wrap hdf__in">
+    <div class="hdf__copy">
+      <p class="eyebrow hdf__eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="hdf__ctas enter" style="--d:0.3s"><HeroCtas tone="dark" /></div>
+    </div>
+  </div>
+
+  <div class="hdf__foot enter" style="--d:0.45s">
+    <ul class="wrap hdf__people" role="list" aria-label="Our advisers">
+      {
+        team.people.map((p) => (
+          <li>
+            <span class="hdf__face">
+              <Image src={p.img} alt="" widths={[96, 144]} sizes="48px" class="fill-img" />
+            </span>
+            <span class="hdf__who">
+              <span class="hdf__name">{p.name}</span>
+              <span class="hdf__role">{p.role}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/film'
+</script>
+
+<style>
+  .hdf {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-navy-deep);
+    color: #fff;
+  }
+  .hdf__media {
+    object-position: 50% 55%;
+  }
+  .hdf__film {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hdf__film:global(.is-on) {
+    opacity: 1;
+  }
+  /* an even navy veil, deeper at the top (behind the words) and at the foot (behind the advisers) */
+  .hdf__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(1 24 59 / 0.62) 0%, rgb(1 24 59 / 0.3) 55%, rgb(1 24 59 / 0.75) 100%),
+      radial-gradient(ellipse 60% 55% at 50% 38%, rgb(1 24 59 / 0.35), rgb(1 24 59 / 0) 70%);
+  }
+  .hdf__in {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-block: calc(var(--hero-pad) + 2svh) 2rem;
+  }
+  .hdf__copy {
+    display: grid;
+    justify-items: center;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+    max-width: 46rem;
+    text-align: center;
+  }
+  .hdf__copy h1 {
+    color: #fff;
+  }
+  .hdf__copy .lede {
+    color: rgb(255 255 255 / 0.88);
+    max-width: 32rem;
+  }
+  .hdf__eyebrow {
+    color: var(--color-gold);
+  }
+  .hdf__eyebrow::after {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  .hdf__ctas :global(.ctas) {
+    justify-content: center;
+  }
+  .hdf__foot {
+    position: relative;
+    border-top: 1px solid rgb(255 255 255 / 0.2);
+    background: rgb(1 24 59 / 0.4);
+    backdrop-filter: blur(8px);
+  }
+  .hdf__people {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .hdf__people li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-block: clamp(0.85rem, 2.2svh, 1.25rem);
+    padding-right: 1rem;
+  }
+  .hdf__people li + li {
+    padding-left: clamp(1rem, 2vw, 1.75rem);
+    border-left: 1px solid rgb(255 255 255 / 0.16);
+  }
+  .hdf__face {
+    position: relative;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--color-navy);
+  }
+  .hdf__face :global(img) {
+    object-position: 50% 20%;
+  }
+  .hdf__who {
+    display: grid;
+    min-width: 0;
+  }
+  .hdf__name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .hdf__role {
+    font-size: 0.65625rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  @media (max-width: 63.99em) {
+    .hdf__people {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hdf__people li:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .hdf__people li:nth-child(n + 3) {
+      border-top: 1px solid rgb(255 255 255 / 0.12);
+    }
+  }
+  @media (max-width: 40em) {
+    .hdf__foot {
+      display: none;
+    }
+  }
+</style>

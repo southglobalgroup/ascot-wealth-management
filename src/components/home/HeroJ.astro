@@ -1,0 +1,91 @@
+---
+/* HERO J, "Triptych" (still photography; his ask, 2026-11-19): white. Their "Clear advice. A lasting relationship." centred, then
+   three tall photographs hung side by side like a gallery wall, the middle one a step taller: a warm stone colonnade, a
+   honey-stone Cotswolds house, a garden walk to a stately home. Stability, place, the long view.
+   Photographs (the Pexels licence): Sabine Otten 30297627, Amine Kübranur Çakıroğlu 37919804, David Pickup 32666469. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import colonnade from '../../assets/img/stock/colonnade.jpg'
+import cotswolds from '../../assets/img/stock/cotswolds-house.jpg'
+import garden from '../../assets/img/stock/garden-path.jpg'
+import { heroes } from '../../data/home'
+const h = heroes.j
+const lines = h.title.split(/(?<=\.) /)
+const panels = [
+  { img: colonnade, alt: 'A warm stone colonnade, its columns in a long receding row' },
+  { img: cotswolds, alt: 'A honey-stone Cotswolds country house behind its hedges and trees' },
+  { img: garden, alt: 'A manicured grass walk between borders leading to a stately home' },
+]
+---
+
+<section class="hj" aria-labelledby="hero-title">
+  <div class="wrap hj__in">
+    <div class="hj__copy">
+      <p class="eyebrow hj__eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">
+        {lines.map((l, i) => (i ? <><br />{l}</> : l))}
+      </h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="hj__ctas enter" style="--d:0.3s"><HeroCtas /></div>
+    </div>
+
+    <div class="hj__wall">
+      {
+        panels.map((p, i) => (
+          <div class="hj__panel enter" style={`--d:${(0.25 + i * 0.12).toFixed(2)}s`}>
+            <Image src={p.img} alt={p.alt} widths={[400, 640, 960]} sizes="(min-width: 64em) 26vw, 33vw" loading="eager" class="fill-img" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .hj {
+    min-height: var(--hero-h);
+    display: flex;
+    background: var(--color-paper);
+  }
+  .hj__in {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 4svh, 2.75rem);
+    padding-block: var(--hero-pad) 0;
+  }
+  .hj__copy {
+    display: grid;
+    justify-items: center;
+    gap: clamp(0.9rem, 2.2svh, 1.4rem);
+    text-align: center;
+  }
+  .hj__copy .lede {
+    max-width: 34rem;
+  }
+  .hj__eyebrow::after {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  .hj__ctas :global(.ctas) {
+    justify-content: center;
+  }
+  /* the wall takes the rest of the screen; the outer two hang a step lower than the middle one */
+  .hj__wall {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.6vw, 1.5rem);
+    min-height: clamp(11rem, 26svh, 30rem);
+  }
+  .hj__panel {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  .hj__panel:nth-child(odd) {
+    margin-top: clamp(1.25rem, 4svh, 3rem);
+  }
+</style>

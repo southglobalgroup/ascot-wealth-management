@@ -1,0 +1,178 @@
+---
+/* HERO A, "Horizon": white. Their line ("A good plan grows with you.") large on the left, the lede and the actions on the right, and
+   under both their own sapling-at-dawn picture as a wide band that takes the rest of the screen, its four "long view" steps along
+   the foot of it. The picture is theirs (the oak film's poster on ascotwm.com). */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import sapling from '../../assets/img/sapling-at-dawn.jpg'
+import { heroes, longView } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.a
+---
+
+<section class="ha" aria-labelledby="hero-title">
+  <div class="wrap ha__top">
+    <div class="ha__head">
+      <p class="eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+    </div>
+    <div class="ha__side">
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas /></div>
+      <p class="ha__trust small enter" style="--d:0.4s">
+        <span><b>FCA authorised</b> · FRN {site.fca.frn}</span>
+        <span class="ha__dot" aria-hidden="true"></span>
+        <span><b class="num">{site.reviews.rating}</b> · {site.reviews.count} reviews on VouchedFor</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="ha__band">
+    <Image src={sapling} alt="A young oak sapling alone in a wide field under a dawn sky" widths={[960, 1280]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img ha__img" />
+    <div class="ha__shade" aria-hidden="true"></div>
+    <ol class="wrap ha__steps enter" style="--d:0.5s" role="list">
+      {
+        longView.steps.map((s, i) => (
+          <li>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <span>{s.title.replace(/\.$/, '')}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .ha {
+    min-height: var(--hero-h);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-paper);
+  }
+  .ha__top {
+    display: grid;
+    gap: clamp(1.25rem, 3svh, 2rem) 4rem;
+    align-items: end;
+    padding-block: var(--hero-pad) clamp(1.5rem, 5svh, 3.25rem);
+  }
+  @media (min-width: 64em) {
+    .ha__top {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+  }
+  .ha__head {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.6rem);
+  }
+  .ha__head .display {
+    max-width: 11ch;
+  }
+  .ha__side {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+    max-width: 30rem;
+  }
+  .ha__trust {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+  }
+  .ha__trust b {
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .ha__dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-line-strong);
+  }
+  .ha__band {
+    position: relative;
+    flex: 1;
+    min-height: clamp(12rem, 28svh, 30rem);
+    overflow: hidden;
+    background: #1b2430;
+  }
+  .ha__img {
+    object-position: 58% 70%;
+  }
+  .ha__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(1 24 59 / 0) 45%, rgb(1 24 59 / 0.72) 100%);
+  }
+  .ha__steps {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    color: #fff;
+  }
+  @media (min-width: 56em) {
+    .ha__steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .ha__steps li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 1.1rem 1.25rem 1.3rem 0;
+    border-top: 1px solid rgb(255 255 255 / 0.32);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  .ha__steps li + li {
+    padding-left: 1.25rem;
+    border-left: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .ha__steps .num {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    letter-spacing: 0.08em;
+  }
+  /* on a phone the four steps would cover the whole picture: they go under it, on navy */
+  @media (max-width: 55.99em) {
+    .ha__band {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: var(--color-navy-deep);
+    }
+    .ha__band :global(.ha__img) {
+      position: relative;
+      flex: 1;
+      min-height: 9rem;
+    }
+    .ha__shade {
+      display: none;
+    }
+    /* one swipeable row, so the picture keeps its room and the hero still fits the screen */
+    .ha__steps {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .ha__steps::-webkit-scrollbar {
+      display: none;
+    }
+    .ha__steps li {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      white-space: nowrap;
+      padding-block: 0.85rem 0.95rem;
+      font-size: 0.875rem;
+    }
+    .ha__dot {
+      display: none;
+    }
+  }
+</style>

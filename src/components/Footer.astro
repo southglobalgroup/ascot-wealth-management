@@ -1,0 +1,188 @@
+---
+/* The foot: the page's one deep-navy ground besides "How we work". Their white logo, how to reach them, their four link columns,
+   the VouchedFor rating and the regulatory line in full, as on the live site. */
+import { Image } from 'astro:assets'
+import Logo from './Logo.astro'
+import vouched from '../assets/brand/vouchedfor-logo-white.png'
+import { site } from '../data/site'
+import { footer } from '../data/nav'
+
+const cols = [
+  { title: 'Services', links: footer.services },
+  { title: 'Company', links: footer.company },
+  { title: 'Legal & Regulatory', links: footer.legal },
+  { title: 'Social Links', links: site.social.map((s) => ({ ...s, external: true })) },
+]
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="foot__brand">
+        <Logo tone="light" height={52} />
+        <address class="foot__contact">
+          <span>{site.address.oneLine}</span>
+          <a class="num" href={site.phoneHref}>{site.phoneDisplay}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </address>
+        <a class="foot__rating" href="/testimonials" aria-label={`${site.reviews.rating} out of 5 from ${site.reviews.count} verified reviews on VouchedFor`}>
+          <Image src={vouched} alt="" width={120} height={Math.round((120 * vouched.height) / vouched.width)} densities={[1, 2]} />
+          <span class="foot__score num">{site.reviews.rating}</span>
+          <span class="foot__stars" aria-hidden="true">
+            {Array.from({ length: 5 }, () => <svg viewBox="0 0 20 20" width="13" height="13"><path d="m10 1.8 2.5 5.3 5.8.7-4.3 4 1.1 5.7L10 14.7l-5.1 2.8L6 11.8 1.7 7.8l5.8-.7L10 1.8Z" fill="currentColor" /></svg>)}
+          </span>
+          <span class="foot__count">Verified · {site.reviews.countPlain} reviews</span>
+        </a>
+      </div>
+
+      <nav class="foot__cols" aria-label="Footer">
+        {
+          cols.map((c) => (
+            <div>
+              <p class="foot__title">{c.title}</p>
+              <ul role="list">
+                {c.links.map((l) => (
+                  <li>
+                    <a href={l.href} {...('external' in l ? { rel: 'noopener', target: '_blank' } : {})}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="foot__base">
+      <p class="foot__reg">{site.regulatory}</p>
+      <p class="foot__copy">
+        <span>© {new Date().getFullYear()} {site.legalName}. All rights reserved.</span>
+        <a href={site.fca.register} rel="noopener" target="_blank">Financial Conduct Authority register</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--color-navy-deep);
+    color: rgb(255 255 255 / 0.74);
+    font-size: 0.9375rem;
+  }
+  .foot a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s var(--ease-soft);
+  }
+  .foot a:hover {
+    color: #fff;
+  }
+  .foot__top {
+    display: grid;
+    gap: 3rem;
+    padding-block: clamp(3.5rem, 6vw, 5rem) 3rem;
+  }
+  @media (min-width: 64em) {
+    .foot__top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);
+      gap: 4rem;
+    }
+  }
+  .foot__brand {
+    display: grid;
+    align-content: start;
+    gap: 1.5rem;
+  }
+  .foot__brand :global(.logo) {
+    height: 52px;
+    width: auto;
+  }
+  .foot__contact {
+    display: grid;
+    gap: 0.35rem;
+    font-style: normal;
+    line-height: 1.55;
+  }
+  .foot__contact a:first-of-type {
+    font-size: 1.25rem;
+    font-weight: 330;
+    color: #fff;
+    margin-top: 0.4rem;
+  }
+  .foot__rating {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    justify-content: start;
+    gap: 0.4rem 0.7rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--radius);
+    width: fit-content;
+  }
+  .foot__rating img {
+    grid-column: 1 / -1;
+    height: auto;
+    opacity: 0.95;
+  }
+  .foot__score {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1;
+  }
+  .foot__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--color-gold);
+  }
+  .foot__count {
+    font-size: 0.8125rem;
+  }
+  .foot__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 2rem;
+  }
+  @media (min-width: 48em) {
+    .foot__cols {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .foot__title {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 1rem;
+  }
+  .foot__cols ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .foot__base {
+    display: grid;
+    gap: 1rem;
+    padding-block: 2rem 2.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+  .foot__reg {
+    max-width: 62rem;
+  }
+  .foot__copy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    color: rgb(255 255 255 / 0.6);
+  }
+  .foot__copy a {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+</style>

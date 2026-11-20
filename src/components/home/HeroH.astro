@@ -1,0 +1,112 @@
+---
+/* HERO H, "Gallery print" (still photography; his ask, 2026-11-19): white. Their planning lines on the left; on the right, on a
+   pale-grey mat that runs to the window's edges, one photograph hung like a framed print: a Mayfair townhouse, white stone and red
+   brick, its arched black door between bay trees, inside a fine gold keyline. Photograph: Kate Strilchuk, Pexels 20411306 (the
+   Pexels licence). */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import townhouse from '../../assets/img/stock/mayfair-townhouse.jpg'
+import { heroes } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.h
+---
+
+<section class="hh" aria-labelledby="hero-title">
+  <div class="hh__mat" aria-hidden="true"></div>
+  <div class="wrap hh__in">
+    <div class="hh__copy">
+      <p class="eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas /></div>
+      <p class="hh__trust small enter" style="--d:0.4s">
+        <span><b>FCA authorised</b> · FRN {site.fca.frn}</span>
+        <span><b class="num">{site.reviews.rating}</b> · {site.reviews.count} reviews on {site.reviews.source}</span>
+      </p>
+    </div>
+    <div class="hh__frame enter" style="--d:0.18s">
+      <div class="hh__print">
+        <Image src={townhouse} alt="A Mayfair townhouse in white stone and red brick, its arched black door between clipped bay trees" widths={[480, 720, 960, 1200]} sizes="(min-width: 64em) 30vw, 80vw" loading="eager" fetchpriority="high" class="fill-img" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hh {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    background: var(--color-paper);
+    overflow: hidden;
+  }
+  .hh__mat {
+    display: none;
+  }
+  .hh__in {
+    position: relative;
+    display: grid;
+    gap: 2.5rem 4rem;
+    align-items: center;
+    padding-block: var(--hero-pad);
+  }
+  .hh__copy {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+  }
+  .hh__copy h1 {
+    max-width: 11ch;
+  }
+  .hh__copy .lede {
+    max-width: 29rem;
+  }
+  .hh__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+  .hh__trust b {
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  /* the print: 2:3, sized from the screen's height so it always hangs with its mat around it; a gold keyline 14px outside it */
+  .hh__frame {
+    justify-self: center;
+    padding: 14px;
+    border: 1px solid rgb(254 173 0 / 0.75);
+  }
+  /* sized from the screen (vw / svh), never from a percentage: the frame shrinks to fit the print, so a % width would have
+     nothing to be a percentage OF and the print collapsed to nothing */
+  .hh__print {
+    position: relative;
+    width: min(34vw, calc((var(--hero-h) - var(--hero-pad) * 2 - 2rem - 30px) * 2 / 3));
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--color-mist-2);
+    box-shadow: 0 30px 60px -40px rgb(1 24 59 / 0.55);
+  }
+  @media (min-width: 64em) {
+    .hh__mat {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 42%;
+      background: var(--color-mist);
+      border-left: 1px solid var(--color-line);
+    }
+    .hh__in {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    }
+    .hh__frame {
+      justify-self: end;
+      margin-right: clamp(0rem, 3vw, 3rem);
+    }
+  }
+  @media (max-width: 63.99em) {
+    .hh__print {
+      width: min(70vw, 22rem);
+    }
+  }
+</style>

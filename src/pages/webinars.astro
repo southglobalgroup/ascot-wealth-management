@@ -1,0 +1,107 @@
+---
+/* WEBINARS & VIDEOS: their six latest videos as a grid of thumbnails (their own YouTube thumbnails, self-hosted; no embedded players),
+   each opening on YouTube, then the way to the whole channel. */
+import { Image } from 'astro:assets'
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { meta, intro, channel, videos } from '../data/pages/webinars'
+import { contact } from '../data/home'
+import { site } from '../data/site'
+
+const youtube = site.social.find((s) => s.label === 'YouTube')?.href ?? ''
+---
+
+<Layout title={meta.title} description={meta.description} path="/webinars">
+  <PageHero crumbs={[{ label: 'Resources', href: '/resources' }, { label: intro.title }]} title={intro.title} lede={intro.lede} />
+
+  <section class="section" aria-labelledby="yt-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="yt-title" class="h2">{channel.title}</h2>
+        <p class="lede">{channel.text}</p>
+      </div>
+      <ul class="vd" role="list">
+        {
+          videos.map((v, i) => (
+            <li>
+              <a class="vd__card" href={v.href} target="_blank" rel="noopener">
+                <div class="vd__img">
+                  <Image src={v.img} alt="" widths={[400, 640, 960]} sizes="(min-width: 64em) 380px, (min-width: 40em) 50vw, 100vw" loading={i < 3 ? 'eager' : 'lazy'} class="fill-img" />
+                  <span class="num vd__len">{v.length}</span>
+                </div>
+                <h3 class="vd__title">{v.title}</h3>
+                <p class="small num">{v.date}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="vd__all">
+        <a class="btn btn-line" href={youtube} target="_blank" rel="noopener">
+          {channel.cta}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Closing eyebrow={contact.eyebrow} title={contact.title} text={contact.lede} actions={[{ label: contact.cta, href: '/contact' }]} />
+</Layout>
+
+<style>
+  .vd {
+    display: grid;
+    gap: 2.5rem 1.75rem;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  @media (min-width: 40em) {
+    .vd {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .vd {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .vd__card {
+    display: grid;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+  .vd__img {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+    background: var(--color-mist-2);
+    border: 1px solid var(--color-line);
+  }
+  .vd__len {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.2rem 0.45rem;
+    border-radius: var(--radius);
+    background: rgb(1 24 59 / 0.86);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .vd__title {
+    font-size: 1.0625rem;
+    font-weight: 550;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--color-navy);
+  }
+  .vd__card:hover .vd__title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  .vd__all {
+    margin-top: 3rem;
+  }
+</style>

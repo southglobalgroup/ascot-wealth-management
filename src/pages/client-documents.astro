@@ -1,0 +1,83 @@
+---
+/* CLIENT DOCUMENTS: their list of client documents as ruled rows; the two published ones open their PDF, the rest say "Coming soon". */
+import LegalPage from '../components/legal/LegalPage.astro'
+import { doc } from '../data/pages/client-documents'
+---
+
+<LegalPage
+  title="Client Documents | Ascot Wealth Management"
+  description={doc.intro}
+  path="/client-documents"
+  heading={doc.title}
+  updated={doc.updated}
+  intro={[doc.intro]}
+  blocks={[{ t: 'h2', text: doc.listTitle, id: 'available-documents' }]}
+>
+  <ul class="cd" role="list">
+    {
+      doc.items.map((d) => (
+        <li class="cd__row">
+          {d.href ? (
+            <a class="cd__name" href={d.href} rel="noopener">
+              {d.name}
+            </a>
+          ) : (
+            <span class="cd__name">{d.name}</span>
+          )}
+          <span class="cd__meta">
+            {d.date && <span class="num">{d.date}</span>}
+            {d.href && <span class="cd__type">PDF</span>}
+            {d.status && <span class="cd__soon">{d.status}</span>}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  <p>{doc.note}</p>
+</LegalPage>
+
+<style>
+  .cd {
+    display: grid;
+    padding: 0 !important;
+    list-style: none !important;
+    border-top: 1px solid var(--color-line);
+  }
+  .cd__row {
+    display: grid;
+    gap: 0.35rem 2rem;
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 40em) {
+    .cd__row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: baseline;
+    }
+  }
+  .cd__name {
+    font-weight: 550;
+    color: var(--color-navy);
+  }
+  a.cd__name {
+    text-underline-offset: 0.2em;
+  }
+  .cd__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-ink-3);
+  }
+  .cd__type,
+  .cd__soon {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .cd__soon {
+    color: var(--color-ink-3);
+  }
+</style>

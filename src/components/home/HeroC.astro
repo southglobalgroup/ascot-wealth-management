@@ -1,0 +1,123 @@
+---
+/* HERO C, "Sunset film" (his ask, 2026-11-19: a full-background stock video): London at sunset, the Shard and the Walkie-Talkie
+   against a gold sky (their crown's colour) over the City's navy silhouette, playing forwards and back without a seam. The words
+   sit at the foot, over the dark skyline, so the sky stays clear above them; the facts sit opposite. Film: Pexels 34313773
+   (scripts/make-hero-film.mjs); poster = its first frame. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import poster from '../../assets/video/hero-poster.jpg'
+import { heroes } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.c
+---
+
+<section class="hcf" aria-labelledby="hero-title">
+  <Image src={poster} alt="" widths={[960, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img hcf__media" />
+  <video class="fill-img hcf__media hcf__film" data-film="/video/hero.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
+  <div class="hcf__scrim" aria-hidden="true"></div>
+
+  <div class="wrap hcf__in">
+    <div class="hcf__copy">
+      <p class="eyebrow hcf__eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas tone="dark" /></div>
+    </div>
+    <dl class="hcf__facts enter" style="--d:0.45s">
+      <div>
+        <dt>FCA authorised</dt>
+        <dd class="num">FRN {site.fca.frn}</dd>
+      </div>
+      <div>
+        <dt>{site.reviews.source}</dt>
+        <dd class="num">{site.reviews.rating} · {site.reviews.count} reviews</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/film'
+</script>
+
+<style>
+  .hcf {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    overflow: hidden;
+    background: var(--color-navy-deep);
+    color: #fff;
+  }
+  .hcf__media {
+    object-position: 50% 40%;
+  }
+  .hcf__film {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hcf__film:global(.is-on) {
+    opacity: 1;
+  }
+  /* the foot carries the words: a navy shade rising from the bottom (where the skyline is already dark), a lighter one from the left */
+  .hcf__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(0deg, rgb(1 24 59 / 0.86) 0%, rgb(1 24 59 / 0.55) 32%, rgb(1 24 59 / 0) 62%),
+      linear-gradient(90deg, rgb(1 24 59 / 0.45) 0%, rgb(1 24 59 / 0) 55%);
+  }
+  .hcf__in {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem 4rem;
+    padding-block: var(--hero-pad) clamp(2rem, 7svh, 4.5rem);
+  }
+  .hcf__copy {
+    display: grid;
+    gap: clamp(1rem, 2.6svh, 1.5rem);
+    max-width: 40rem;
+  }
+  .hcf__copy h1 {
+    color: #fff;
+    max-width: 13ch;
+  }
+  .hcf__copy .lede {
+    color: rgb(255 255 255 / 0.88);
+    max-width: 32rem;
+  }
+  .hcf__eyebrow {
+    color: var(--color-gold);
+  }
+  .hcf__facts {
+    display: grid;
+    gap: 0;
+    min-width: 15rem;
+    border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+  .hcf__facts div {
+    display: grid;
+    gap: 0.15rem;
+    padding-block: 0.8rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .hcf__facts dt {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .hcf__facts dd {
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  @media (max-width: 47.99em) {
+    .hcf__facts {
+      display: none;
+    }
+  }
+</style>

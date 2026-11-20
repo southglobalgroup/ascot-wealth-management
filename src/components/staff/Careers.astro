@@ -1,0 +1,53 @@
+---
+/* CAREER OPPORTUNITIES (/staff#careers, where the Resources menu's "Careers" lands): their words on pale grey, the heading on the
+   left and the one notice on the right. "Submit Your CV" opens a dialog on the live site; here it writes to their enquiries address. */
+import { staffPage } from '../../data/pages/staff'
+import { site } from '../../data/site'
+const c = staffPage.careers
+---
+
+<section id="careers" class="section bg-tint cr" aria-labelledby="careers-title">
+  <div class="wrap cr__in">
+    <div class="head">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h2 id="careers-title" class="h2">{c.title}</h2>
+    </div>
+    <div class="cr__panel">
+      <h3 class="h3">{c.status}</h3>
+      {c.text.map((p) => <p>{p}</p>)}
+      <div>
+        <a class="btn btn-navy" href={`mailto:${site.email}`}>{c.cta}</a>
+      </div>
+      <p class="small cr__note">{c.note}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cr__in {
+    display: grid;
+    gap: 2.5rem 4rem;
+    align-items: start;
+  }
+  @media (min-width: 64em) {
+    .cr__in {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    }
+  }
+  .cr__panel {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--color-line);
+    border-top: 2px solid var(--color-gold);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+  }
+  .cr__panel > div {
+    margin-top: 0.5rem;
+  }
+  .cr__note {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+</style>

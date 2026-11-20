@@ -1,0 +1,147 @@
+---
+/* The close of a page (their "Ready to Get Started?" and the like): a diptych. On the left the page's own closing words and
+   actions, then how to reach them with the telephone number set largest; on the right one of their pictures to the edge of the
+   window. The home page's Contact section is this with its own words. */
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+import office from '../assets/img/office-view.webp'
+import { site } from '../data/site'
+
+type Action = { label: string; href: string; kind?: 'gold' | 'line' }
+type Props = { eyebrow?: string; title: string; text?: string; actions?: Action[]; image?: ImageMetadata; alt?: string; details?: boolean; id?: string }
+const {
+  eyebrow = 'Contact',
+  title,
+  text,
+  actions = [{ label: 'Book a free introductory call', href: '/contact' }],
+  image = office,
+  alt = 'An office meeting room with a view across the town',
+  details = true,
+  id = 'closing-title',
+} = Astro.props
+---
+
+<section class="cl" aria-labelledby={id}>
+  <div class="cl__media">
+    <Image src={image} alt={alt} widths={[800, 1200, 1536]} sizes="(min-width: 64em) 46vw, 100vw" class="fill-img" />
+  </div>
+  <div class="wrap cl__in">
+    <div class="cl__copy">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h2 id={id} class="h2">{title}</h2>
+      {text && <p class="lede">{text}</p>}
+      {
+        actions.length > 0 && (
+          <div class="cl__actions">
+            {actions.map((a) => (
+              <a class={`btn ${a.kind === 'line' ? 'btn-line' : 'btn-gold'}`} href={a.href}>
+                {a.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      {
+        details && (
+          <dl class="cl__list">
+            <div>
+              <dt>Telephone</dt>
+              <dd>
+                <a class="cl__phone num" href={site.phoneHref}>
+                  {site.phoneDisplay}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Office</dt>
+              <dd>{site.address.oneLine}</dd>
+            </div>
+          </dl>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cl {
+    position: relative;
+    background: var(--color-paper);
+    border-top: 1px solid var(--color-line);
+  }
+  .cl__in {
+    padding-block: var(--section);
+  }
+  .cl__copy {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .cl__copy .lede {
+    max-width: 30rem;
+  }
+  .cl__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .cl__list {
+    display: grid;
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .cl__list div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .cl__list dt {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .cl__list dd {
+    color: var(--color-ink);
+  }
+  .cl__list a {
+    text-decoration: none;
+  }
+  .cl__list a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .cl__phone {
+    font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.25rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--color-navy);
+  }
+  .cl__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+  }
+  @media (min-width: 64em) {
+    .cl__media {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 46%;
+      aspect-ratio: auto;
+    }
+    .cl__copy {
+      max-width: 50%;
+      padding-right: 3rem;
+    }
+  }
+</style>

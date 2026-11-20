@@ -1,0 +1,15 @@
+---
+import LegalPage from '../components/legal/LegalPage.astro'
+import { legal } from '../data/pages/legal'
+const d = legal['privacy-policy']
+---
+
+<LegalPage
+  title="Privacy Policy | AWM - Ascot Wealth Management"
+  description="Ascot Wealth Management Ltd is committed to protecting the privacy and security of your personal information."
+  path="/privacy-policy"
+  heading={d.title}
+  updated={d.updated}
+  intro={d.intro}
+  blocks={d.blocks}
+/>

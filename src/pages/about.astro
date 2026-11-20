@@ -1,0 +1,204 @@
+---
+/* /about, "About Ascot Wealth Management": their story beside the office's details, then why choose them as a numbered, ruled list
+   that ends with the way to their client stories, then their closing words. */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import countryside from '../assets/img/about/ascot-countryside.jpg'
+import { aboutPage as a } from '../data/pages/about'
+import { site } from '../data/site'
+const o = a.office
+const w = a.why
+---
+
+<Layout title={a.title} description={a.description} path="/about">
+  <PageHero crumbs={[{ label: 'About Us' }]} eyebrow={a.hero.eyebrow} title={a.hero.title} lede={a.hero.lede} actions={a.hero.actions} image={countryside} alt={a.hero.alt} />
+
+  <section class="section st" aria-labelledby="story-title">
+    <div class="wrap st__in">
+      <div class="st__copy">
+        <h2 id="story-title" class="h2">{a.story.title}</h2>
+        <p class="lede">{a.story.text[0]}</p>
+        {a.story.text.slice(1).map((p) => <p>{p}</p>)}
+      </div>
+      <aside class="st__office" aria-labelledby="office-title">
+        <h3 id="office-title" class="h3">{o.title}</h3>
+        <dl class="st__list">
+          <div>
+            <dt>{o.labels.address}</dt>
+            <dd>
+              {
+                site.address.lines.map((l, i) => (
+                  <>
+                    {l}
+                    {i < site.address.lines.length - 1 && <br />}
+                  </>
+                ))
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>{o.labels.phone}</dt>
+            <dd><a class="num" href={site.phoneHref}>{site.phoneDisplay}</a></dd>
+          </div>
+          <div>
+            <dt>{o.labels.email}</dt>
+            <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+          </div>
+          <div>
+            <dt>{o.labels.hours}</dt>
+            <dd>{o.hours.map((h) => <span class="st__line">{h}</span>)}</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section bg-tint wy" aria-labelledby="why-title">
+    <div class="wrap">
+      <div class="head-split">
+        <div class="head">
+          <p class="eyebrow">{w.eyebrow}</p>
+          <h2 id="why-title" class="h2">{w.title}</h2>
+        </div>
+        <p class="lede">{w.lede}</p>
+      </div>
+      <ol class="wy__list" role="list">
+        {
+          w.items.map((it, i) => (
+            <li class="wy__row">
+              <span class="wy__n num">{String(i + 1).padStart(2, '0')}</span>
+              <div class="wy__title">
+                <h3 class="h3">{it.title}</h3>
+                <p class="wy__line">{it.line}</p>
+              </div>
+              <p class="wy__text">{it.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="wy__row wy__more">
+        <span class="wy__n" aria-hidden="true"></span>
+        <div class="wy__title">
+          <h3 class="h3">{w.stories.title}</h3>
+        </div>
+        <div class="wy__text wy__go">
+          <p>{w.stories.text}</p>
+          <a class="link-arrow" href={w.stories.cta.href}>
+            {w.stories.cta.label}
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Closing title={a.closing.title} text={a.closing.text} actions={a.closing.actions} />
+</Layout>
+
+<style>
+  .st__in {
+    display: grid;
+    gap: 3rem 5rem;
+    align-items: start;
+  }
+  @media (min-width: 64em) {
+    .st__in {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    }
+  }
+  .st__copy {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 42rem;
+  }
+  .st__copy .h2 {
+    margin-bottom: 0.4rem;
+  }
+  .st__office {
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--color-gold);
+  }
+  .st__list {
+    display: grid;
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .st__list div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .st__list dt {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .st__list dd {
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+  .st__list a {
+    text-decoration: none;
+  }
+  .st__list a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .st__line {
+    display: block;
+  }
+
+  .wy__list {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .wy__row {
+    display: grid;
+    gap: 0.6rem 2rem;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 48em) {
+    .wy__row {
+      grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.3fr);
+      align-items: baseline;
+      padding-block: 2.1rem;
+    }
+  }
+  .wy__n {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .wy__title {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .wy__line {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-ink-2);
+  }
+  .wy__text {
+    color: var(--color-ink-3);
+  }
+  .wy__more {
+    border-bottom: 0;
+  }
+  @media (max-width: 47.99em) {
+    .wy__more .wy__n {
+      display: none;
+    }
+  }
+  .wy__go {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+</style>

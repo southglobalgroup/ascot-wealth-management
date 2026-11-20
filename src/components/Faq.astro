@@ -1,0 +1,123 @@
+---
+/* Questions and answers (their words), as ruled rows that open in one soft movement (the height and the answer together, reversible
+   half-way). Opening one closes the others in the same list. Without script every answer is simply shown. */
+type Item = { q: string; a: string | string[] }
+type Props = { items: Item[]; id?: string }
+const { items, id = 'faq' } = Astro.props
+---
+
+<div class="faq" data-faq>
+  {
+    items.map((it, i) => (
+      <div class="faq__item">
+        <h3 class="faq__h">
+          <button type="button" class="faq__q" aria-expanded="false" aria-controls={`${id}-a-${i}`} id={`${id}-q-${i}`}>
+            <span>{it.q}</span>
+            <span class="faq__icon" aria-hidden="true" />
+          </button>
+        </h3>
+        <div class="faq__a" id={`${id}-a-${i}`} role="region" aria-labelledby={`${id}-q-${i}`}>
+          <div class="faq__inner">
+            {(Array.isArray(it.a) ? it.a : [it.a]).map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-faq]').forEach((list) => {
+    list.classList.add('is-js')
+    const qs = [...list.querySelectorAll<HTMLButtonElement>('.faq__q')]
+    qs.forEach((q) =>
+      q.addEventListener('click', () => {
+        const open = q.getAttribute('aria-expanded') !== 'true'
+        qs.forEach((o) => o.setAttribute('aria-expanded', String(o === q ? open : false)))
+      }),
+    )
+  })
+</script>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--color-line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1.25rem 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    font: inherit;
+    font-size: 1.0625rem;
+    font-weight: 550;
+    color: var(--color-navy);
+    cursor: pointer;
+  }
+  .faq__q:hover span:first-child {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+  }
+  .faq__icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: var(--color-gold-ink);
+    transition: transform 0.45s var(--ease-soft);
+  }
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq__q[aria-expanded='true'] .faq__icon::after {
+    transform: rotate(0deg);
+  }
+  .faq.is-js .faq__a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease-soft);
+  }
+  .faq.is-js .faq__q[aria-expanded='true'] + .faq__a,
+  .faq.is-js .faq__h:has(.faq__q[aria-expanded='true']) + .faq__a {
+    grid-template-rows: 1fr;
+  }
+  .faq__inner {
+    overflow: hidden;
+    display: grid;
+    gap: 0.75rem;
+    max-width: 50rem;
+    color: var(--color-ink-2);
+  }
+  .faq.is-js .faq__inner {
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-soft);
+  }
+  .faq.is-js .faq__h:has(.faq__q[aria-expanded='true']) + .faq__a .faq__inner {
+    opacity: 1;
+    transition-delay: 0.08s;
+  }
+  .faq__inner p:last-child {
+    padding-bottom: 1.4rem;
+  }
+</style>

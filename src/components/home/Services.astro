@@ -1,0 +1,230 @@
+---
+/* SERVICES, "Advice shaped around your life.": their six service scenes as an index on the left (Investments ... Business) and one
+   large picture with its words on the right; pointing at or choosing a name brings its scene forward in one soft crossfade.
+   On a phone (and without script) the six simply stack. The FCA risk warnings sit in full under their services. */
+import { Image } from 'astro:assets'
+import { servicesIntro, servicesAlt, serviceScenes } from '../../data/home'
+/* under hero C, which opens with the services line, this section uses their menu's heading for the services instead */
+type Props = { heroHasTitle?: boolean }
+const { heroHasTitle = false } = Astro.props
+const s = heroHasTitle ? { ...servicesAlt, lede: '' } : servicesIntro
+---
+
+<section class="section sv" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="head-split">
+      <div class="head">
+        <p class="eyebrow">{s.eyebrow}</p>
+        <h2 id="services-title" class="h2">{s.title}</h2>
+      </div>
+      {s.lede && <p class="lede">{s.lede}</p>}
+    </div>
+
+    <div class="sv__body" data-explorer>
+      <ol class="sv__tabs" role="tablist" aria-label="Our services">
+        {
+          serviceScenes.map((x, i) => (
+            <li role="presentation">
+              <button type="button" role="tab" id={`sv-tab-${i}`} aria-controls={`sv-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} class="sv__tab" data-tab={i}>
+                <span class="num sv__n">{String(i + 1).padStart(2, '0')}</span>
+                <span class="sv__tabname">{x.tab}</span>
+                <span class="sv__tabline">{x.name}</span>
+              </button>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="sv__stage">
+        {
+          serviceScenes.map((x, i) => (
+            <article class={`sv__panel${i === 0 ? ' is-on' : ''}`} id={`sv-panel-${i}`} role="tabpanel" aria-labelledby={`sv-tab-${i}`} data-panel={i}>
+              <div class="sv__media">
+                <Image src={x.img} alt={x.alt} widths={[640, 960, 1280]} sizes="(min-width: 64em) 58vw, 100vw" loading={i === 0 ? 'eager' : 'lazy'} class="fill-img" />
+              </div>
+              <div class="sv__words">
+                <p class="sv__kicker">
+                  <span class="num">{String(i + 1).padStart(2, '0')}</span> {x.kicker}
+                </p>
+                <h3 class="sv__line">{x.line}</h3>
+                <div class="sv__detail">
+                  <p class="sv__name">{x.name}</p>
+                  <p>{x.text}</p>
+                  {x.warning && <p class="risk">{x.warning}</p>}
+                  <a class="link-arrow" href={x.href}>
+                    {x.cta}
+                    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="sv__all">
+      <a class="btn btn-line" href="/services">View All Services</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/explorer'
+</script>
+
+<style>
+  .sv__body {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--color-line);
+  }
+  .sv__tabs {
+    display: none;
+  }
+  .sv__stage {
+    display: grid;
+    gap: 3rem;
+    padding-top: 2.5rem;
+  }
+  .sv__panel {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .sv__media {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  .sv__words {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .sv__kicker {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .sv__line {
+    font-size: clamp(1.6rem, 1.2rem + 1.1vw, 2.15rem);
+    font-weight: 330;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .sv__detail {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 32rem;
+  }
+  .sv__name {
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .sv__all {
+    margin-top: 3rem;
+  }
+
+  /* desktop with script: the index and one scene at a time */
+  @media (min-width: 64em) {
+    :global(html.js) .sv__body {
+      display: grid;
+      grid-template-columns: minmax(0, 0.62fr) minmax(0, 2fr);
+      gap: 3.5rem;
+    }
+    :global(html.js) .sv__tabs {
+      display: grid;
+      align-content: start;
+    }
+    .sv__tab {
+      display: grid;
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: 0.1rem 0.25rem;
+      width: 100%;
+      padding: 1.6rem 0 1.6rem 1rem;
+      border: 0;
+      border-bottom: 1px solid var(--color-line);
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+    }
+    .sv__tab::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -1px;
+      bottom: -1px;
+      width: 2px;
+      background: var(--color-gold);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.45s var(--ease-soft);
+    }
+    .sv__tab[aria-selected='true']::before {
+      transform: scaleY(1);
+    }
+    .sv__n {
+      grid-row: span 2;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-ink-3);
+      padding-top: 0.2rem;
+    }
+    .sv__tabname {
+      font-size: 1.0625rem;
+      font-weight: 500;
+      color: var(--color-ink-2);
+      transition: color 0.25s var(--ease-soft);
+    }
+    .sv__tabline {
+      font-size: 0.8125rem;
+      color: var(--color-ink-3);
+    }
+    .sv__tab:hover .sv__tabname,
+    .sv__tab[aria-selected='true'] .sv__tabname {
+      color: var(--color-navy);
+    }
+    .sv__tab[aria-selected='true'] .sv__n {
+      color: var(--color-gold-ink);
+    }
+    /* the picture and its words stay put under the bar while the index scrolls past (his ask, 2026-11-19) */
+    :global(html.js) .sv__stage {
+      display: grid;
+      padding-top: 0;
+      position: sticky;
+      top: calc(var(--bar-h) + 1.5rem);
+      align-self: start;
+    }
+    :global(html.js) .sv__panel {
+      grid-area: 1 / 1;
+      /* not stretched to the index's height, so the picture's top lines up with the first name in the index */
+      align-self: start;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: end;
+      padding-top: 1.1rem;
+      opacity: 0;
+      visibility: hidden;
+    }
+    :global(html.js) .sv__panel.is-on {
+      opacity: 1;
+      visibility: visible;
+    }
+    /* the crossfade only once the script has started, so nothing fades on first paint */
+    .sv__body.is-ready .sv__panel {
+      transition:
+        opacity 0.55s var(--ease-soft),
+        visibility 0s linear 0.55s;
+    }
+    .sv__body.is-ready .sv__panel.is-on {
+      transition: opacity 0.55s var(--ease-soft);
+    }
+    :global(html.js) .sv__media {
+      aspect-ratio: 4 / 3.4;
+    }
+  }
+</style>

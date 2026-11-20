@@ -1,0 +1,22 @@
+---
+/* Their logo, as they supply it: the navy wordmark with the gold crown (on light grounds) or the white one (on navy). */
+import { Image } from 'astro:assets'
+import dark from '../assets/brand/ascot-logo.png'
+import light from '../assets/brand/ascot-logo-white.png'
+
+type Props = { tone?: 'dark' | 'light'; height?: number; class?: string; eager?: boolean }
+const { tone = 'dark', height = 44, class: cls = '', eager = false } = Astro.props
+const src = tone === 'dark' ? dark : light
+const width = Math.round((height * src.width) / src.height)
+---
+
+<Image
+  src={src}
+  alt="Ascot Wealth Management"
+  width={width}
+  height={height}
+  densities={[1, 2, 3]}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  class={`logo ${cls}`}
+/>

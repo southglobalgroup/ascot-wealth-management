@@ -1,0 +1,93 @@
+---
+/* INSIGHTS, "Data-Driven Financial Intelligence": their two featured insights, each led by its own figure (15+, £500M) set large
+   beside its story, then their closing "Want More Personalized Insights?". */
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { meta, intro, featured, closing } from '../data/pages/insights'
+---
+
+<Layout title={meta.title} description={meta.description} path="/insights">
+  <PageHero crumbs={[{ label: 'Resources', href: '/resources' }, { label: intro.eyebrow }]} eyebrow={intro.eyebrow} title={intro.title} lede={intro.lede} />
+
+  <section class="section" aria-labelledby="fi-title">
+    <div class="wrap">
+      <h2 id="fi-title" class="h2">{featured.title}</h2>
+      <ol class="fi" role="list">
+        {
+          featured.items.map((f) => (
+            <li class="fi__item">
+              <div class="fi__fig">
+                <p class="num fi__n">{f.figure}</p>
+                <p class="fi__label">{f.label}</p>
+              </div>
+              <div class="fi__words">
+                <h3 class="h3 fi__title">{f.title}</h3>
+                <p>{f.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Closing eyebrow={intro.eyebrow} title={closing.title} text={closing.text} actions={[{ label: closing.cta, href: '/contact' }]} />
+</Layout>
+
+<style>
+  .fi {
+    display: grid;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid var(--color-line);
+  }
+  .fi__item {
+    display: grid;
+    gap: 1.25rem 4rem;
+    padding-block: clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--color-line);
+  }
+  @media (min-width: 56em) {
+    .fi__item {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+      align-items: start;
+    }
+  }
+  .fi__fig {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .fi__n {
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--color-navy);
+  }
+  .fi__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .fi__label::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-gold);
+  }
+  .fi__words {
+    display: grid;
+    gap: 0.9rem;
+    max-width: 40rem;
+  }
+  .fi__title {
+    font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.6rem);
+    font-weight: 450;
+  }
+</style>

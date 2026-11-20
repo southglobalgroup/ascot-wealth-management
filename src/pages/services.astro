@@ -1,0 +1,175 @@
+---
+/* /services, "How Can We Help?": the home page's six service scenes, opened out. An index of the six under the H1 jumps down the
+   page; each service is then a chapter (its scene, its number as on the home index, its own paragraph, its five key features on
+   hairlines, "Find Out More"), the picture swapping sides down the page. The risk warnings sit in full under their services. */
+import { Image } from 'astro:assets'
+import Layout from '../layouts/Layout.astro'
+import PageHero from '../components/PageHero.astro'
+import Closing from '../components/Closing.astro'
+import { services, servicesPage as p } from '../data/pages/services'
+import room from '../assets/img/consultation-room.webp'
+
+const n = (i: number) => String(i + 1).padStart(2, '0')
+---
+
+<Layout title={p.meta.title} description={p.meta.description} path="/services">
+  <PageHero crumbs={[{ label: 'Services' }]} eyebrow={p.eyebrow} title={p.title} lede={p.lede}>
+    <ol class="so-index" role="list" aria-label="Our services">
+      {
+        services.map((s, i) => (
+          <li>
+            <a href={`#${s.slug}`}>
+              <span class="num">{n(i)}</span>
+              {s.title}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </PageHero>
+
+  <div class="so">
+    {
+      services.map((s, i) => (
+        <section id={s.slug} class:list={['so__item', { 'so__item--flip': i % 2 === 1 }]} aria-labelledby={`so-${s.slug}`}>
+          <div class="wrap so__in">
+            <div class="so__media">
+              <Image src={s.img} alt={s.alt} widths={[640, 960, 1280]} sizes="(min-width: 64em) 600px, 100vw" loading={i === 0 ? 'eager' : 'lazy'} class="fill-img" />
+            </div>
+            <div class="so__words">
+              <p class="so__n num">
+                {n(i)} <span aria-hidden="true">/</span> {n(services.length - 1)}
+              </p>
+              <h2 id={`so-${s.slug}`} class="so__title">
+                {s.title}
+              </h2>
+              <p>{s.summary}</p>
+              <ul class="so__features" role="list">
+                {s.features.map((f) => (
+                  <li>{f}</li>
+                ))}
+              </ul>
+              {s.warning && <p class="risk">{s.warning}</p>}
+              <a class="link-arrow" href={`/services/${s.slug}`} aria-describedby={`so-${s.slug}`}>
+                {p.more}
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <Closing
+    eyebrow={p.eyebrow}
+    title={p.closing.title}
+    text={p.closing.text}
+    actions={[{ label: p.closing.cta, href: '/contact' }]}
+    image={room}
+    alt="A consulting room with an oak table, a fireplace and a garden beyond the windows"
+  />
+</Layout>
+
+<style>
+  /* the six as a jump index under the H1 */
+  .so-index {
+    display: grid;
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .so-index a {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--color-line);
+    font-weight: 500;
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+  .so-index a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+  }
+  .so-index .num {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  @media (min-width: 40em) {
+    .so-index {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2rem;
+    }
+  }
+  @media (min-width: 64em) {
+    .so-index {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      width: min(100%, 46rem);
+    }
+  }
+
+  /* the six chapters */
+  .so__item + .so__item .so__in {
+    border-top: 1px solid var(--color-line);
+  }
+  .so__in {
+    display: grid;
+    gap: 2rem 4.5rem;
+    align-items: center;
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+  .so__media {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-mist-2);
+  }
+  .so__words {
+    display: grid;
+    gap: 1rem;
+    max-width: 34rem;
+  }
+  .so__n {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--color-gold-ink);
+  }
+  .so__n span {
+    margin-inline: 0.2rem;
+    color: var(--color-line-strong);
+  }
+  .so__title {
+    font-size: clamp(1.75rem, 1.3rem + 1.3vw, 2.4rem);
+    font-weight: 330;
+    line-height: 1.12;
+    letter-spacing: -0.028em;
+  }
+  .so__features {
+    border-top: 1px solid var(--color-line);
+    margin-block: 0.25rem 0.5rem;
+  }
+  .so__features li {
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .so__words .link-arrow {
+    justify-self: start;
+  }
+  @media (min-width: 64em) {
+    .so__in {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+    .so__item--flip .so__media {
+      order: 2;
+    }
+  }
+</style>

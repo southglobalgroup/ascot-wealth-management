@@ -1,0 +1,134 @@
+---
+/* HERO B, "Coast": their coastal-path picture across the whole screen, a navy shade from the left under their line
+   ("Clear advice. A lasting relationship."), and a quiet bar of three facts along the foot: the regulator, the reviews and
+   the first step. The page's one photographic, darker opening; everything below it is white and pale grey. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import coast from '../../assets/img/coast-path.webp'
+import { heroes } from '../../data/home'
+import { site } from '../../data/site'
+const h = heroes.b
+---
+
+<section class="hb" aria-labelledby="hero-title">
+  <Image src={coast} alt="A coastal footpath winding through grasses towards an open sea horizon" widths={[960, 1536]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img hb__img" />
+  <div class="hb__scrim" aria-hidden="true"></div>
+
+  <div class="wrap hb__in">
+    <div class="hb__copy">
+      <p class="eyebrow hb__eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">{h.title}</h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas tone="dark" /></div>
+    </div>
+  </div>
+
+  <div class="hb__foot enter" style="--d:0.45s">
+    <ul class="wrap hb__facts" role="list">
+      <li>
+        <span class="hb__k">FCA authorised</span>
+        <span class="hb__v">FRN {site.fca.frn}</span>
+      </li>
+      <li>
+        <span class="hb__k">{site.reviews.source}</span>
+        <span class="hb__v num">{site.reviews.rating} · {site.reviews.count} reviews</span>
+      </li>
+      <li>
+        <span class="hb__k">Free introductory call</span>
+        <span class="hb__v">Free, no obligation.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hb {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-navy-deep);
+    color: #fff;
+  }
+  .hb__img {
+    object-position: 62% 50%;
+  }
+  /* weighted to the left where the words are, near-even below 64em where they span the width */
+  .hb__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(1 24 59 / 0.9) 0%, rgb(1 24 59 / 0.74) 34%, rgb(1 24 59 / 0.18) 70%, rgb(1 24 59 / 0) 100%),
+      linear-gradient(180deg, rgb(1 24 59 / 0) 60%, rgb(1 24 59 / 0.55) 100%);
+  }
+  @media (max-width: 63.99em) {
+    .hb__scrim {
+      background: linear-gradient(180deg, rgb(1 24 59 / 0.55) 0%, rgb(1 24 59 / 0.8) 55%, rgb(1 24 59 / 0.92) 100%);
+    }
+  }
+  .hb__in {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-block: var(--hero-pad);
+  }
+  .hb__copy {
+    display: grid;
+    gap: clamp(1rem, 2.8svh, 1.6rem);
+    max-width: 38rem;
+  }
+  .hb__copy h1 {
+    color: #fff;
+    max-width: 12ch;
+  }
+  .hb__copy .lede {
+    color: rgb(255 255 255 / 0.86);
+    max-width: 30rem;
+  }
+  .hb__eyebrow {
+    color: var(--color-gold);
+  }
+  .hb__foot {
+    position: relative;
+    border-top: 1px solid rgb(255 255 255 / 0.22);
+    background: rgb(1 24 59 / 0.35);
+    backdrop-filter: blur(6px);
+  }
+  .hb__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .hb__facts li {
+    display: grid;
+    gap: 0.15rem;
+    padding-block: clamp(0.9rem, 2.4svh, 1.4rem);
+    padding-right: 1rem;
+  }
+  .hb__facts li + li {
+    padding-left: clamp(1rem, 2.5vw, 2rem);
+    border-left: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .hb__k {
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .hb__v {
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  @media (max-width: 40em) {
+    .hb__facts {
+      grid-template-columns: 1fr;
+    }
+    .hb__facts li + li {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid rgb(255 255 255 / 0.14);
+    }
+  }
+</style>

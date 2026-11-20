@@ -1,0 +1,11 @@
+---
+/* CONTACT on the home page, "Start with a conversation.": the shared closing diptych with their home page's words. Under hero I,
+   which opens with that line, it closes with their Services page's own "Ready to Get Started?" instead. */
+import Closing from '../Closing.astro'
+import { contact, contactAlt } from '../../data/home'
+type Props = { heroHasTitle?: boolean }
+const { heroHasTitle = false } = Astro.props
+const c = heroHasTitle ? contactAlt : contact
+---
+
+<Closing eyebrow={c.eyebrow} title={c.title} text={c.lede} actions={[{ label: c.cta, href: '/contact' }]} id="ct-title" />

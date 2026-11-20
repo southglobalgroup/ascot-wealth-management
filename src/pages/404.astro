@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { site } from '../data/site'
+---
+
+<Layout title="Page not found | Ascot Wealth Management" path="/404" noindex>
+  <section class="section nf">
+    <div class="wrap nf__in">
+      <p class="eyebrow">Error 404</p>
+      <h1 class="h2">That page could not be found.</h1>
+      <p class="lede">It may have moved when the site was rebuilt. These will get you to what you were looking for.</p>
+      <div class="nf__links">
+        <a class="btn btn-gold" href="/">Home</a>
+        <a class="btn btn-line" href="/services">Our services</a>
+        <a class="btn btn-line" href="/contact">Contact</a>
+      </div>
+      <p class="small">Or call us on <a class="num" href={site.phoneHref}>{site.phoneDisplay}</a>.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf__in {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 44rem;
+    min-height: calc(70svh - var(--bar-h));
+    align-content: center;
+  }
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

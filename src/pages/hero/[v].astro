@@ -1,0 +1,11 @@
+---
+/* /hero/d ... /hero/g: the home page with hero option D (dusk film), E (autumn estate), F (London twilight) or G (estate band), for
+   choosing against C, which is the home page. (A and B are off the site for now, at his word; add 'a' or 'b' to bring one back.) */
+import HomePage from '../../components/home/HomePage.astro'
+export function getStaticPaths() {
+  return (['d', 'e', 'f', 'g', 'h', 'i', 'j'] as const).map((v) => ({ params: { v }, props: { v } }))
+}
+const { v } = Astro.props
+---
+
+<HomePage hero={v} />

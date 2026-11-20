@@ -1,0 +1,19 @@
+# dependencies and build output
+node_modules
+dist
+.astro
+
+# raw material scraped from the live ascotwm.com (page dumps, the live site's own JS bundle, original videos and photos):
+# kept on the build PC only, never published. The site needs none of it: everything it uses is in src/ and public/.
+_scrape
+
+# review screenshots, logs, generated server config (the Dockerfile writes nginx.conf.template)
+_shots
+*.log
+nginx.conf.template
+_dbg.mjs
+_f.mjs
+
+# secrets
+.env
+.env.*

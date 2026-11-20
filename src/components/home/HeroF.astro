@@ -1,0 +1,130 @@
+---
+/* HERO F, "Twilight" (his ask, 2026-11-19: more film heroes): London at twilight across the whole screen, a navy sky over a pink
+   horizon and the city's lights (Pexels 5236101; scripts/make-hero-film.mjs hero-f). Their "Clear advice. A lasting relationship."
+   on the left; down the right, their own three steps, We listen / We explain / You decide, on a ruled column. */
+import { Image } from 'astro:assets'
+import HeroCtas from './HeroCtas.astro'
+import poster from '../../assets/video/hero-f-poster.jpg'
+import { heroes, approach } from '../../data/home'
+const h = heroes.f
+const titleLines = h.title.split(/(?<=\.) /)
+---
+
+<section class="hf" aria-labelledby="hero-title">
+  <Image src={poster} alt="" widths={[960, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="fill-img" />
+  <video class="fill-img hf__film" data-film="/video/hero-f.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
+  <div class="hf__scrim" aria-hidden="true"></div>
+
+  <div class="wrap hf__in">
+    <div class="hf__copy">
+      <p class="eyebrow hf__eyebrow enter">{h.eyebrow}</p>
+      <h1 id="hero-title" class="display enter" style="--d:0.08s">
+        {titleLines.map((l, i) => (i ? <><br />{l}</> : l))}
+      </h1>
+      <p class="lede enter" style="--d:0.2s">{h.lede}</p>
+      <div class="enter" style="--d:0.3s"><HeroCtas tone="dark" /></div>
+    </div>
+
+    <ol class="hf__steps" role="list">
+      {
+        approach.pillars.map((p, i) => (
+          <li class="enter" style={`--d:${(0.4 + i * 0.1).toFixed(2)}s`}>
+            <span class="hf__n num">{p.n}</span>
+            <span class="hf__word">{p.title}</span>
+            {p.text && <span class="hf__text">{p.text}</span>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/film'
+</script>
+
+<style>
+  .hf {
+    position: relative;
+    min-height: var(--hero-h);
+    display: flex;
+    overflow: hidden;
+    background: var(--color-navy-deep);
+    color: #fff;
+  }
+  .hf__film {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hf__film:global(.is-on) {
+    opacity: 1;
+  }
+  .hf__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(1 24 59 / 0.7) 0%, rgb(1 24 59 / 0.35) 45%, rgb(1 24 59 / 0.15) 70%, rgb(1 24 59 / 0.45) 100%),
+      linear-gradient(0deg, rgb(1 24 59 / 0.5) 0%, rgb(1 24 59 / 0) 40%);
+  }
+  .hf__in {
+    position: relative;
+    flex: 1;
+    display: grid;
+    align-items: center;
+    gap: 2.5rem 4rem;
+    padding-block: var(--hero-pad);
+  }
+  @media (min-width: 64em) {
+    .hf__in {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+    }
+  }
+  .hf__copy {
+    display: grid;
+    gap: clamp(1rem, 2.8svh, 1.6rem);
+    max-width: 40rem;
+  }
+  .hf__copy h1 {
+    color: #fff;
+  }
+  .hf__copy .lede {
+    color: rgb(255 255 255 / 0.86);
+    max-width: 30rem;
+  }
+  .hf__eyebrow {
+    color: var(--color-gold);
+  }
+  .hf__steps {
+    display: grid;
+    align-self: center;
+    border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+  .hf__steps li {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.2rem 0.5rem;
+    padding-block: clamp(0.9rem, 2.4svh, 1.4rem);
+    border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .hf__n {
+    grid-row: span 2;
+    padding-top: 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gold);
+  }
+  .hf__word {
+    font-size: clamp(1.4rem, 1.1rem + 0.8vw, 1.75rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .hf__text {
+    font-size: 0.875rem;
+    color: rgb(255 255 255 / 0.78);
+  }
+  @media (max-width: 47.99em) {
+    .hf__steps {
+      display: none;
+    }
+  }
+</style>

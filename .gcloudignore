@@ -1,0 +1,15 @@
+# `gcloud run deploy --source` uploads this folder and reads THIS file (not .dockerignore, which only applies once the build is running).
+# Keep out: every .env, the work folders (the scrape holds the old site's pages and the client's own documents as downloaded, _3d the Blender scene and its renders at full size,
+# the shots hold screenshots), and what the build recreates.
+node_modules
+dist
+dist-*
+.git
+_shots
+_scrape
+_build
+_3d
+.astro
+.env
+.env.*
+*.log
